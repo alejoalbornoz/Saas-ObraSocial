@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -21,6 +20,7 @@ model User {
   id        Int   @id @default(autoincrement())
   name      String
   lastName  String?
+  DNI       String   @unique
   email     String   @unique
   password  String
   role      Role      @default(USUARIO)
