@@ -5,6 +5,8 @@ import {
   logoutUser,
 } from "../controllers/usersController.js";
 
+import { verifyToken } from "../middleware/authMiddleware.js";
+
 const router = Router();
 
 router.post("/register", registerUser);

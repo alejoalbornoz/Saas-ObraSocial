@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import usersRouter from "./routes/users.route.js";
 
+
 export const app = express();
 
 app.use(morgan("dev"));

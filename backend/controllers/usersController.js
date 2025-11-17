@@ -10,7 +10,9 @@ export async function registerUser(req, res) {
 
   try {
     if (!name || !lastName || !email || !password || !DNI) {
-      return res.status(400).json({ message: "Todos los campos son requeridos" });
+      return res
+        .status(400)
+        .json({ message: "Todos los campos son requeridos" });
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -80,8 +82,8 @@ export async function loginUser(req, res) {
     // COOKIE PARA LOCALES
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,     // CAMBIAR A true en producción
-      sameSite: "lax",   // CAMBIAR A "none" en producción
+      secure: false, // CAMBIAR A true en producción
+      sameSite: "lax", // CAMBIAR A "none" en producción
       maxAge: 3600000,
     });
 
@@ -96,8 +98,8 @@ export function logoutUser(req, res) {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false,    // Match con el login para local
-      sameSite: "lax",  // Match con el login para local
+      secure: false, // Match con el login para local
+      sameSite: "lax", // Match con el login para local
     });
 
     return res.json({ message: "Sesión cerrada correctamente" });
