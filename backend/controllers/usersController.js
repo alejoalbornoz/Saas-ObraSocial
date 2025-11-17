@@ -2,21 +2,20 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/envconfig.js";
+
 const prisma = new PrismaClient();
 
 export async function registerUser(req, res) {
   const { name, lastName, email, password, DNI } = req.body;
 
   try {
-    // 1. Validación campo vacío
     if (!name || !lastName || !email || !password || !DNI) {
-      return res
-        .status(400)
-        .json({ message: "Todos los campos son requeridos" });
+      return res.status(400).json({ message: "Todos los campos son requeridos" });
     }
+
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [{ email: email }, { DNI: DNI }],
+        OR: [{ email }, { DNI }],
       },
     });
 
@@ -47,9 +46,7 @@ export async function registerUser(req, res) {
     });
   } catch (error) {
     console.error("Server error:", error);
-    return res.status(500).json({
-      message: "Error del servidor",
-    });
+    return res.status(500).json({ message: "Error del servidor" });
   }
 }
 
@@ -62,9 +59,7 @@ export async function loginUser(req, res) {
     }
 
     const user = await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
+      where: { email },
     });
 
     if (!user) {
@@ -77,13 +72,37 @@ export async function loginUser(req, res) {
     }
 
     if (!JWT_SECRET) {
-      throw new Error("Falta JWT_SECRET en el archivo .env");
+      throw new Error("Falta JWT_SECRET en .env");
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
-    res.json({ message: "Incio de sesión exitoso", token });
-    
+
+    // COOKIE PARA LOCALES
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,     // CAMBIAR A true en producción
+      sameSite: "lax",   // CAMBIAR A "none" en producción
+      maxAge: 3600000,
+    });
+
+    return res.json({ message: "Inicio de sesión exitoso" });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Error del servidor" });
+  }
+}
+
+export function logoutUser(req, res) {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,    // Match con el login para local
+      sameSite: "lax",  // Match con el login para local
+    });
+
+    return res.json({ message: "Sesión cerrada correctamente" });
+  } catch (error) {
+    console.error("Error en logout:", error);
+    return res.status(500).json({ message: "Error al cerrar sesión" });
   }
 }
