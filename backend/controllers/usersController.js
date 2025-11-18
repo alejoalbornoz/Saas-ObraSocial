@@ -108,3 +108,13 @@ export function logoutUser(req, res) {
     return res.status(500).json({ message: "Error al cerrar sesión" });
   }
 }
+
+export async function getAllUsers(req, res) {
+  try {
+    const users = await prisma.user.findMany();
+    return res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ message: "Error del servidor" });
+  }
+}

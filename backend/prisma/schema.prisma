@@ -10,20 +10,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  lastName     String
+  DNI          String     @unique
+  email        String     @unique
+  password     String
+  role         Role       @default(USUARIO)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relación 1:1 con Doctor (si el user es médico)
+  doctor       Doctor?
+
+  // Turnos del paciente
+  patientShifts Shift[]
+}
+
+model Doctor {
+  id          Int        @id @default(autoincrement())
+  userId      Int        @unique
+  specialty   String
+  bio         String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  user        User       @relation(fields: [userId], references: [id])
+  doctorShifts Shift[]
+}
+
+model Shift {
+  id          Int         @id @default(autoincrement())
+  date        DateTime
+  status      ShiftStatus @default(PENDIENTE)
+
+  patientId   Int
+  patient     User        @relation(fields: [patientId], references: [id])
+
+  doctorId    Int
+  doctor      Doctor      @relation(fields: [doctorId], references: [id])
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
 enum Role {
   ADMIN
   USUARIO
   MEDICO
 }
 
-model User {
-  id        Int   @id @default(autoincrement())
-  name      String
-  lastName  String?
-  DNI       String   @unique
-  email     String   @unique
-  password  String
-  role      Role      @default(USUARIO)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum ShiftStatus {
+  PENDIENTE
+  CONFIRMADO
+  CANCELADO
+  RECHAZADO
+  FINALIZADO
 }
