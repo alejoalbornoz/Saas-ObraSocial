@@ -77,7 +77,9 @@ export async function loginUser(req, res) {
       throw new Error("Falta JWT_SECRET en .env");
     }
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     // COOKIE PARA LOCALES
     res.cookie("token", token, {

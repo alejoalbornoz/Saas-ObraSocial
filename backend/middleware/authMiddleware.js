@@ -1,27 +1,39 @@
 import jwt from "jsonwebtoken";
-
 import { JWT_SECRET } from "../config/envconfig.js";
+
 
 export function verifyToken(req, res, next) {
   try {
-    const token = req.cookies.token;
+    const cookieToken = req.cookies?.token;
+    const headerToken = req.headers.authorization?.replace("Bearer ", "");
+
+    const token = cookieToken || headerToken;
 
     if (!token) {
-      res
+      return res
         .status(401)
         .json({ message: "No autorizado: Token no proporcionado" });
     }
 
-    if (!JWT_SECRET) {
-      throw new Error("Falta el JWT_SECRET");
-    }
-
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
-    next();
 
+    return next();
   } catch (error) {
-    console.error("Error en autenticación:", error);
-    return res.status(401).json({ message: "Token inválido o expirado"})
+    return res.status(401).json({ message: "Token inválido o expirado" });
   }
+}
+
+export function verifyAdmin(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({ message: "No autenticado" });
+  }
+
+  if (req.user.role !== "ADMIN") {
+    return res
+      .status(403)
+      .json({ message: "Acceso denegado. Requiere rol ADMIN." });
+  }
+
+  return next();
 }
