@@ -109,15 +109,6 @@ export function logoutUser(req, res) {
   }
 }
 
-export async function getAllUsers(req, res) {
-  try {
-    const users = await prisma.user.findMany();
-    return res.json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return res.status(500).json({ message: "Error del servidor" });
-  }
-}
 
 export async function updateUserInfo(req, res) {
   try {
@@ -248,5 +239,27 @@ export async function deleteUserAccount(req, res) {
     return res.status(500).json({
       message: "Error al eliminar la cuenta",
     });
+  }
+}
+
+export async function getAllDoctors(req, res) {
+  try {
+    const doctors = await prisma.doctor.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return res.json(doctors);
+  } catch (error) {
+    console.error("Error obteniendo médicos:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 }

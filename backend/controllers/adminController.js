@@ -1,12 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "../config/prismaClient.js";
 
-/**
- * Cambiar rol de un usuario
- * Solo ADMIN puede ejecutar esto.
- * Cuando un usuario pasa a MEDICO se crea Doctor.
- * Cuando vuelve a USUARIO se elimina Doctor.
- */
+//   Cambiar rol de un usuario
+//  Solo ADMIN puede ejecutar esto.
+
 export async function updateUserRole(req, res) {
   const { userId, newRole, specialty, bio } = req.body;
 
@@ -90,5 +86,49 @@ export async function updateUserRole(req, res) {
     return res.status(500).json({
       message: "Error al actualizar el rol del usuario",
     });
+  }
+}
+
+export async function getAllUsers(req, res) {
+  try {
+    const users = await prisma.user.findMany();
+    return res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ message: "Error del servidor" });
+  }
+}
+
+export async function getUserById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { id: Number(id) },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        DNI: true,
+        role: true,
+        createdAt: true,
+        doctor: {
+          select: {
+            specialty: true,
+            bio: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    console.error("Error obteniendo usuario:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 }

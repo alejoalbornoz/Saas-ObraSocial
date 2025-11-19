@@ -3,10 +3,11 @@ import {
   registerUser,
   loginUser,
   logoutUser,
-  getAllUsers,
+
   updateUserInfo,
   changeOwnPassword,
   deleteUserAccount,
+  getAllDoctors,
 } from "../controllers/usersController.js";
 
 import { verifyToken } from "../middleware/authMiddleware.js";
@@ -16,7 +17,7 @@ const router = Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
-router.get("/", getAllUsers);
+router.get("/doctors", verifyToken, getAllDoctors);
 router.patch("/update", verifyToken, updateUserInfo);
 router.patch("/change-password", verifyToken, changeOwnPassword);
 router.delete("/delete-account", verifyToken, deleteUserAccount);
