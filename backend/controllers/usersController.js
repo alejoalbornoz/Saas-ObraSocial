@@ -212,3 +212,41 @@ export async function changeOwnPassword(req, res) {
   }
 }
 
+export async function deleteUserAccount(req, res) {
+  try {
+    const userId = req.user.id;
+    const { password } = req.body;
+
+    if (!password) {
+      return res
+        .status(400)
+        .json({ message: "Debes ingresar tu contraseña para confirmar" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    // Verificar contraseña
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+
+    // Eliminar usuario
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return res.json({ message: "Cuenta eliminada correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    return res.status(500).json({
+      message: "Error al eliminar la cuenta",
+    });
+  }
+}
