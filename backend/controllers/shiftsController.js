@@ -174,3 +174,55 @@ export async function cancelShift(req, res) {
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
+
+export async function confirmShift(req, res) {
+  try {
+    const doctorUserId = req.user.id; // ID del usuario logueado (que es médico)
+    const { id } = req.params; // ID del turno a confirmar
+
+    // Buscar el registro del médico asociado a este usuario
+    const doctor = await prisma.doctor.findUnique({
+      where: { userId: doctorUserId },
+    });
+
+    if (!doctor) {
+      return res
+        .status(403)
+        .json({ message: "Solo los médicos pueden confirmar turnos." });
+    }
+
+    
+    const shift = await prisma.shift.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!shift) {
+      return res.status(404).json({ message: "Turno no encontrado." });
+    }
+
+    if (shift.doctorId !== doctor.id) {
+      return res.status(403).json({
+        message: "No tenés permiso para confirmar este turno.",
+      });
+    }
+
+    if (shift.status !== ShiftStatus.PENDIENTE) {
+      return res.status(400).json({
+        message: `El turno no puede ser confirmado porque está ${shift.status}.`,
+      });
+    }
+
+    const updatedShift = await prisma.shift.update({
+      where: { id: shift.id },
+      data: { status: ShiftStatus.CONFIRMADO },
+    });
+
+    return res.json({
+      message: "Turno confirmado correctamente.",
+      turno: updatedShift,
+    });
+  } catch (error) {
+    console.error("Error al confirmar turno:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+}
