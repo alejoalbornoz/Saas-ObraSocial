@@ -1,5 +1,7 @@
 import { prisma } from "../config/prismaClient.js";
 
+import { ShiftStatus } from "@prisma/client";
+
 /**
  * Crear un turno médico
  * El paciente selecciona al médico por nombre y especialidad,
@@ -92,5 +94,83 @@ export async function createShift(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error al crear el turno" });
+  }
+}
+
+export async function getShiftById(req, res) {
+  try {
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    const { id } = req.params;
+
+    const shift = await prisma.shift.findUnique({
+      where: { id: Number(id) },
+      include: {
+        patient: {
+          select: { id: true, name: true, lastName: true, email: true },
+        },
+        doctor: {
+          include: {
+            user: {
+              select: { id: true, name: true, lastName: true, email: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!shift) {
+      return res.status(404).json({ message: "Turno no encontrado" });
+    }
+
+    // Permisos
+    const isPatient = shift.patientId === userId;
+    const isDoctor = shift.doctor.userId === userId;
+    const isAdmin = userRole === "ADMIN";
+
+    if (!isPatient && !isDoctor && !isAdmin) {
+      return res
+        .status(403)
+        .json({ message: "No tenés permiso para ver este turno" });
+    }
+
+    return res.json(shift);
+  } catch (error) {
+    console.error("Error al obtener turno:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+}
+
+export async function cancelShift(req, res) {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const shift = await prisma.shift.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!shift) {
+      return res.status(404).json({ message: "El turno no existe" });
+    }
+
+    if (shift.patientId !== userId) {
+      return res
+        .status(403)
+        .json({ message: "No tenes permiso para cancelar este turno" });
+    }
+
+    const updatedShift = await prisma.shift.update({
+      where: { id: Number(id) },
+      data: { status: ShiftStatus.CANCELADO },
+    });
+
+    return res.json({
+      message: "Turno cancelado exitosamente",
+      turno: updatedShift,
+    });
+  } catch (error) {
+    console.error("Error al cancelar turno:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
