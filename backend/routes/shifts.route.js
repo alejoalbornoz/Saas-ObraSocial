@@ -4,6 +4,7 @@ import {
   getShiftById,
   cancelShift,
   confirmShift,
+  cancelShiftByDoctor,
 } from "../controllers/shiftsController.js";
 import { verifyToken, verifyDoctor } from "../middleware/authMiddleware.js";
 
@@ -11,7 +12,13 @@ const router = Router();
 
 router.post("/create", verifyToken, createShift);
 router.get("/:id", verifyToken, getShiftById);
-router.patch("/confirm/:id", verifyDoctor, confirmShift);
+router.patch("/confirm/doctor/:id", verifyToken, verifyDoctor, confirmShift);
+router.patch(
+  "/cancel/doctor/:id",
+  verifyToken,
+  verifyDoctor,
+  cancelShiftByDoctor
+);
 router.delete("/cancel/:id", verifyToken, cancelShift);
 
 export default router;

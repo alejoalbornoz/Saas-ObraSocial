@@ -191,7 +191,6 @@ export async function confirmShift(req, res) {
         .json({ message: "Solo los médicos pueden confirmar turnos." });
     }
 
-    
     const shift = await prisma.shift.findUnique({
       where: { id: Number(id) },
     });
@@ -223,6 +222,59 @@ export async function confirmShift(req, res) {
     });
   } catch (error) {
     console.error("Error al confirmar turno:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+}
+
+export async function cancelShiftByDoctor(req, res) {
+  try {
+    const doctorUserId = req.user.id; // ID del usuario logueado (médico)
+    const { id } = req.params; // ID del turno a cancelar
+
+    // Buscar el médico asociado a este usuario
+    const doctor = await prisma.doctor.findUnique({
+      where: { userId: doctorUserId },
+    });
+
+    if (!doctor) {
+      return res
+        .status(403)
+        .json({ message: "Solo los médicos pueden cancelar turnos." });
+    }
+
+    // Encontrar el turno
+    const shift = await prisma.shift.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!shift) {
+      return res.status(404).json({ message: "Turno no encontrado." });
+    }
+
+    // Verificar que el turno pertenezca a este médico
+    if (shift.doctorId !== doctor.id) {
+      return res.status(403).json({
+        message: "No tenés permiso para cancelar este turno.",
+      });
+    }
+
+    // Validar que el turno no esté ya cancelado
+    if (shift.status === ShiftStatus.CANCELADO) {
+      return res.status(400).json({ message: "El turno ya está cancelado." });
+    }
+
+    // Actualizar turno a CANCELADO
+    const updatedShift = await prisma.shift.update({
+      where: { id: shift.id },
+      data: { status: ShiftStatus.CANCELADO },
+    });
+
+    return res.json({
+      message: "Turno cancelado correctamente por el médico.",
+      turno: updatedShift,
+    });
+  } catch (error) {
+    console.error("Error al cancelar turno como médico:", error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
