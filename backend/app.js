@@ -3,10 +3,11 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 
-import "./cron/subscriptionCron.js";
+import "./cron/suscriptionCron.js";
 import usersRouter from "./routes/users.route.js";
 import shiftsRouter from "./routes/shifts.route.js";
 import adminRouter from "./routes/admin.route.js";
+import suscriptionsRouter from "./routes/suscriptions.route.js";
 
 export const app = express();
 
@@ -18,3 +19,4 @@ app.use(cookieParser());
 app.use("/api/users", usersRouter);
 app.use("/api/shifts", shiftsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/suscriptions", suscriptionsRouter);

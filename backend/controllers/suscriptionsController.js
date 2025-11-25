@@ -32,9 +32,10 @@ export async function createSubscription(req, res) {
       },
     });
 
-    // 🔥 Lógica de Mercado Pago (placeholder)
-    // Acá deberías generar preferencia de pago:
-    // const mpUrl = await generarPago(plan, subscription.id)
+    await prisma.user.update({
+      where: { id: userId },
+      data: { afiliation: plan },
+    });
 
     return res.json({
       message: "Suscripción creada. Falta completar el pago.",
@@ -53,7 +54,7 @@ export async function cancelSubscription(req, res) {
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId,
-        status: SubscriptionStatus.ACTIVE,
+        status: { in: [SubscriptionStatus.ACTIVE, SubscriptionStatus.PENDING] },
       },
     });
 
@@ -71,7 +72,7 @@ export async function cancelSubscription(req, res) {
 
     await prisma.user.update({
       where: { id: userId },
-      data: { afiliation: AfiliationPlan.NO_AFILIADO },
+      data: { afiliation: "NO_AFILIADO" },
     });
 
     return res.json({ message: "Suscripción cancelada correctamente" });
