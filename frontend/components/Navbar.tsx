@@ -18,7 +18,7 @@ export default function Navbar() {
             <p className="text-[25px]">Obra Social</p>
           </a>
 
-          <ul className="flex flex-row gap-25 cursor-pointer text-[20px]">
+          <ul className="flex flex-row gap-25 cursor-pointer text-[20px] text-blue-700 font-semibold">
             <li>Servicios</li>
             <li>Planes</li>
             <li>Contacto</li>
