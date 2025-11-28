@@ -5,3 +5,9 @@ body {
   position: relative;
   scroll-behavior: smooth;
 }
+
+a,
+li,
+button {
+  cursor: pointer;
+}
