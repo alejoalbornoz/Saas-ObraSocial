@@ -1,7 +1,7 @@
 import Contact from "@/components/Contact";
 import React from "react";
 
-export default function page() {
+export default function ContactPage() {
   return (
     <>
       <Contact />
