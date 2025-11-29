@@ -1,10 +1,10 @@
-import Contact from "@/components/Contact";
 import React from "react";
+import About from "@/components/About";
 
 export default function page() {
   return (
     <>
-      <Contact />
+      <About />
     </>
   );
 }

@@ -21,13 +21,13 @@ export default function Servicios() {
   ];
 
   return (
-    <section className="w-full py-20 bg-white flex flex-col items-center gap-14">
+    <section
+      className="w-full py-20 bg-white flex flex-col items-center gap-14"
+      id="services"
+    >
       <h2 className="text-[50px] font-bold text-center">Nuestros servicios</h2>
 
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-7xl px-6"
-        id="services"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-7xl px-6">
         {services.map((s, i) => (
           <div
             key={i}

@@ -13,14 +13,16 @@ export default function Navbar() {
               width={40}
               height={40}
             />
-            <p className="text-[25px]">Obra Social</p>
+            <Link className="text-[25px]" href="/">
+              Obra Social
+            </Link>
           </a>
 
           <div className="flex-1 flex justify-center">
             <ul className="flex gap-8 items-center text-[18px] sm:text-[20px] text-blue-700 font-semibold">
               <li>
-                <Link href="/servicios" className="hover:text-blue-900">
-                  Servicios
+                <Link href="/informacion" className="hover:text-blue-900">
+                  Quienes somos
                 </Link>
               </li>
               <li>

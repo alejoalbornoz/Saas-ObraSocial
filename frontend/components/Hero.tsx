@@ -3,8 +3,20 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <div className="relative h-[80vh]">
-      <div className="h-screen flex items-center justify-center px-10 relative overflow-hidden">
+    <div className="relative h-[80vh] overflow-hidden">
+      {/* Imagen blurreada */}
+      <Image
+        src="/hospital.jpg"
+        alt="Hospital"
+        fill
+        className="object-cover blur-xs scale-100"
+        priority
+      />
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/30" />
+
+      <div className="h-full flex items-center justify-center px-10 relative overflow-hidden">
         {/* Lunares */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 w-16 h-16 bg-blue-300/30 rounded-full blur-sm" />
@@ -19,30 +31,21 @@ export default function Hero() {
           <div className="absolute top-2/3 left-5 w-16 h-16 bg-blue-300/20 rounded-full blur-sm" />
         </div>
 
-        {/* Contenido CENTRADO */}
-        <div className="flex flex-col gap-6 w-[45%] z-10 -translate-x-[30%]">
-          <h1 className="text-[100px] font-bold leading-tight">
+        {/* Contenido */}
+        <div className="flex flex-col gap-6 w-[50%] z-10 text-center">
+          <h1 className="text-[100px] font-bold leading-tight text-white drop-shadow-lg">
             Tu Obra Social de confianza
           </h1>
 
-          <p className="text-[40px] leading-snug">
+          <p className="text-[40px] leading-snug text-white drop-shadow">
             Ofrecemos una amplia variedad de servicios para cuidar tu salud y la
             de tu familia
           </p>
 
-          <button className="bg-blue-500 text-white text-[20px] px-6 py-3 rounded-lg cursor-pointer w-fit">
+          <button className="bg-blue-500 text-white text-[20px] px-6 py-3 rounded-lg cursor-pointer w-fit mx-auto">
             Conoce más
           </button>
         </div>
-
-        {/* Imagen en absolute */}
-        <Image
-          src="/doctora1.png"
-          alt="Hero Image"
-          width={1200}
-          height={1200}
-          className="absolute right-0 bottom-0 max-w-[55%] object-contain pointer-events-none"
-        />
       </div>
     </div>
   );
