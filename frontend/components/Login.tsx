@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Login() {
@@ -78,9 +79,12 @@ export default function Login() {
         {/* Crear cuenta */}
         <p className="text-center text-sm">
           ¿No tenés cuenta?{" "}
-          <a href="#" className="text-blue-700 font-semibold hover:underline">
+          <Link
+            href="/register"
+            className="text-blue-700 font-semibold hover:underline"
+          >
             Creala ahora
-          </a>
+          </Link>
         </p>
 
         {/* Links de ayuda */}
@@ -100,7 +104,7 @@ export default function Login() {
       {/* COL DERECHA – IMAGEN */}
       <div className="hidden md:block relative">
         <Image
-          src="/doctor.jpg"     
+          src="/doctor.jpg"
           alt="Login Image"
           fill
           className="object-cover"
