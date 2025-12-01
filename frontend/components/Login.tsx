@@ -2,9 +2,51 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import {useRouter} from "next/navigation";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:4000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Error al iniciar sesión");
+        setLoading(false);
+        return;
+      }
+
+     
+      router.push("/home-user");
+    } catch (err) {
+      setError("Error de conexión. Intenta nuevamente.");
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
 
   return (
     <div className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2">
@@ -17,12 +59,23 @@ export default function Login() {
 
         <h1 className="text-3xl font-semibold mb-6">Iniciá sesión</h1>
 
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+
         {/* Email */}
         <label className="text-gray-700 font-medium">Email</label>
         <input
           type="email"
           placeholder="Ingresá tu email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onKeyDown={handleKeyDown}
           className="w-full border border-gray-400 rounded-lg px-4 py-2 mt-1 mb-4 focus:outline-blue-500"
+          required
         />
 
         {/* Password */}
@@ -31,7 +84,11 @@ export default function Login() {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Ingresá tu contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="w-full border border-gray-400 rounded-lg px-4 py-2 pr-10 focus:outline-blue-500"
+            required
           />
           <button
             type="button"
@@ -43,8 +100,12 @@ export default function Login() {
         </div>
 
         {/* Botón ingresar */}
-        <button className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-2 mt-6 text-lg font-medium">
-          Ingresar
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-2 mt-6 text-lg font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {loading ? "Ingresando..." : "Ingresar"}
         </button>
 
         {/* Recuperación */}

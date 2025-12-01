@@ -2,10 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
@@ -23,7 +25,6 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validaciones básicas
     if (
       !form.name ||
       !form.lastName ||
@@ -73,7 +74,6 @@ export default function RegisterPage() {
       console.log(data);
       alert("Cuenta creada con éxito");
 
-      // Limpiar formulario
       setForm({
         name: "",
         lastName: "",
@@ -83,8 +83,7 @@ export default function RegisterPage() {
         password2: "",
       });
 
-      // Opcional: redirigir al login
-      // window.location.href = "/login";
+      router.push("/login");
     } catch (error) {
       console.error(error);
       alert(error instanceof Error ? error.message : "Error al registrarse");
@@ -95,13 +94,13 @@ export default function RegisterPage() {
     <div className="h-screen w-full flex items-center justify-center mt-40">
       {/* COL IZQUIERDA – FORM CENTRADO */}
       <div className="flex justify-center items-center px-6 sm:px-12 lg:px-20 py-10">
-        <div className="w-full">
+        <div className="w-[500px]">
           <div className="mb-10">
             <Image src="/iconsalud.png" alt="logo" width={60} height={60} />
           </div>
           <h1 className="text-3xl font-semibold mb-6">Crear tu cuenta</h1>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="flex flex-col">
             {/* Nombre */}
             <label className="text-gray-700 font-medium">Nombre</label>
             <input
@@ -228,15 +227,15 @@ export default function RegisterPage() {
 
           {/* Links de ayuda */}
           <div className="mt-8 text-sm flex flex-col gap-2 text-center">
-            <a href="#" className="text-blue-700 hover:underline">
+            <Link href="#" className="text-blue-700 hover:underline">
               Resolvé tus dudas
-            </a>
-            <a href="#" className="text-blue-700 hover:underline">
+            </Link>
+            <Link href="#" className="text-blue-700 hover:underline">
               ¿Necesitás ayuda?
-            </a>
-            <a href="#" className="text-blue-700 hover:underline">
+            </Link>
+            <Link href="#" className="text-blue-700 hover:underline">
               Ver Políticas de Privacidad
-            </a>
+            </Link>
           </div>
         </div>
       </div>
