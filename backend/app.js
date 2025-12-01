@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import "./cron/suscriptionCron.js";
 import usersRouter from "./routes/users.route.js";
@@ -12,6 +13,12 @@ import suscriptionsRouter from "./routes/suscriptions.route.js";
 export const app = express();
 
 app.use(morgan("dev"));
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
