@@ -263,3 +263,28 @@ export async function getAllDoctors(req, res) {
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
+
+export async function getMe(req, res) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        lastName: true,
+        DNI: true,
+        afiliation: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.json({ user });
+  } catch (error) {
+    console.log("Error obteniendo datos del usuario:", error);
+    return res.status(500).json({ message: "Error interno" });
+  }
+}

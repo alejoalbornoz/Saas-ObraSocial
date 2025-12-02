@@ -13,12 +13,10 @@ export default function proxy(req: NextRequest) {
     pathname.startsWith(route)
   );
 
-  // 🔥 1. Si YA tiene token y quiere ir a login/register → lo echamos
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL("/home-user", req.url));
   }
 
-  // 🔥 2. Si NO tiene token y quiere entrar a rutas protegidas → a login
   if (tryingToAccessProtected && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
