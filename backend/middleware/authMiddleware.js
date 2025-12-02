@@ -4,27 +4,34 @@ import { JWT_SECRET } from "../config/envconfig.js";
 import { prisma } from "../config/prismaClient.js";
 import { SubscriptionStatus } from "@prisma/client";
 
-export function verifyToken(req, res, next) {
+export async function verifyToken(req, res, next) {
   try {
     const cookieToken = req.cookies?.token;
     const headerToken = req.headers.authorization?.replace("Bearer ", "");
-
     const token = cookieToken || headerToken;
 
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: "No autorizado: Token no proporcionado" });
+      return res.status(401).json({ message: "No autorizado: falta token" });
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
 
-    return next();
+    // 🔥 Verificar que el usuario existe realmente
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Usuario no encontrado" });
+    }
+
+    req.user = user;
+    next();
   } catch (error) {
     return res.status(401).json({ message: "Token inválido o expirado" });
   }
 }
+
 
 export function verifyAdmin(req, res, next) {
   if (!req.user) {
@@ -39,39 +46,15 @@ export function verifyAdmin(req, res, next) {
 
   return next();
 }
-
 export async function verifyDoctor(req, res, next) {
-  try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({ message: "No autorizado. Falta token." });
+  await verifyToken(req, res, async () => {
+    if (req.user.role !== "MEDICO") {
+      return res.status(403).json({ message: "Acceso denegado. No sos médico." });
     }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-    });
-
-    if (!user) {
-      return res.status(401).json({ message: "Usuario no encontrado." });
-    }
-
-    if (user.role !== "MEDICO") {
-      return res
-        .status(403)
-        .json({ message: "Acceso denegado. No sos medico." });
-    }
-
-    req.user = user;
-
     next();
-  } catch (error) {
-    console.error(error);
-    return res.status(401).json({ message: "Token inválido o expirado." });
-  }
+  });
 }
+
 
 export async function verifySubscription(req, res, next) {
   try {

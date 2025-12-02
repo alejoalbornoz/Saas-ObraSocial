@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/envconfig.js";
 import { prisma } from "../config/prismaClient.js";
 
-
 export async function registerUser(req, res) {
   const { name, lastName, email, password, DNI } = req.body;
 
@@ -83,8 +82,9 @@ export async function loginUser(req, res) {
     // COOKIE PARA LOCALES
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // CAMBIAR A true en producción
-      sameSite: "lax", // CAMBIAR A "none" en producción
+      secure: false,
+      sameSite: "lax",
+      path: "/", // 👈 SIN ESTO NO FUNCA EL PROXY
       maxAge: 3600000,
     });
 
@@ -263,4 +263,3 @@ export async function getAllDoctors(req, res) {
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
-

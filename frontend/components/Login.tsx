@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +23,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // 👈 OBLIGATORIO PARA QUE GUARDE LA COOKIE
         body: JSON.stringify({ email, password }),
       });
 
@@ -34,7 +35,6 @@ export default function Login() {
         return;
       }
 
-     
       router.push("/home-user");
     } catch (err) {
       setError("Error de conexión. Intenta nuevamente.");
