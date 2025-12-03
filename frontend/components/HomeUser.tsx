@@ -1,9 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useEffect } from "react";
+
+type User = {
+  id: string;
+  name: string;
+  lastName: string;
+  email: string;
+};
 
 export default function HomeUser() {
-  const userName = "Juan Pérez"; // reemplazalo dinámicamente si querés
+;
+  const [user, setUser] = useState<User | null>(null);
+
+  const [loading, setLoading] = useState(true);
 
   const cards = [
     {
@@ -36,6 +48,26 @@ export default function HomeUser() {
     },
   ];
 
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch("http://localhost:4000/api/users/me", {
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchUser();
+  }, []);
+
   return (
     <main className="min-h-screen flex justify-center items-center bg-gray-50 p-6 md:p-10">
       {/* Contenedor central grande */}
@@ -58,7 +90,14 @@ export default function HomeUser() {
         {/* Saludo */}
         <section className="mb-8">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-            Hola, <span className="text-blue-600">{userName}</span>
+            Hola,{" "}
+            <span className="text-blue-600">
+              {loading
+                ? "Cargando..."
+                : user
+                ? `${user.name} ${user.lastName}`
+                : "Usuario no encontrado"}
+            </span>
           </h2>
           <p className="mt-2 text-gray-600">
             ¿En qué te podemos ayudar hoy? Elegí una opción rápida.

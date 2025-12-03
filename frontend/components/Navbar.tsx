@@ -55,7 +55,7 @@ export default function Navbar() {
               )}
               {user && (
                 <Link
-                  href="/perfil"
+                  href="/home-user/profile"
                   className="mr-10 flex items-center gap-2 hover:opacity-80"
                 >
                   <UserPen />
