@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { showToast } from "nextjs-toast-notify";
 
 type User = {
   id: string;
@@ -12,7 +14,6 @@ type User = {
 };
 
 export default function HomeUser() {
-;
   const [user, setUser] = useState<User | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -48,7 +49,11 @@ export default function HomeUser() {
     },
   ];
 
+  const router = useRouter();
+
   useEffect(() => {
+    let redirected = false;
+
     async function fetchUser() {
       try {
         const res = await fetch("http://localhost:4000/api/users/me", {
@@ -58,6 +63,19 @@ export default function HomeUser() {
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
+
+          if (!redirected && data.user.afiliation === "NO_AFILIADO") {
+            redirected = true;
+            router.replace("/planes");
+            showToast.warning("¡Elija un Plan para Afiliarse!", {
+              duration: 10000,
+              progress: true,
+              position: "bottom-right",
+              transition: "slideInUp",
+              icon: "",
+              sound: false,
+            });
+          }
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -65,8 +83,9 @@ export default function HomeUser() {
         setLoading(false);
       }
     }
+
     fetchUser();
-  }, []);
+  }, [router]);
 
   return (
     <main className="min-h-screen flex justify-center items-center bg-gray-50 p-6 md:p-10">
