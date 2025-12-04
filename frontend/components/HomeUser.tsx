@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import { showToast } from "nextjs-toast-notify";
 
@@ -23,7 +22,7 @@ export default function HomeUser() {
       id: "medicos",
       title: "Buscar médicos",
       desc: "Encontrá especialistas, filtros por especialidad y turnos disponibles.",
-      href: "/buscar/medicos",
+      href: "/buscar/doctores",
       emoji: "🩺",
     },
     {
@@ -105,8 +104,6 @@ export default function HomeUser() {
             </div>
           </div>
         </header>
-
-        {/* Saludo */}
         <section className="mb-8">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
             Hola,{" "}
@@ -134,12 +131,11 @@ export default function HomeUser() {
                 aria-label={c.title}
               >
                 <div className="flex items-center gap-5">
-                  {/* Icono circular */}
+                 
                   <div className="flex-none w-16 h-16 rounded-lg bg-blue-50 flex items-center justify-center text-3xl">
                     <span aria-hidden>{c.emoji}</span>
                   </div>
 
-                  {/* Texto */}
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600">
                       {c.title}

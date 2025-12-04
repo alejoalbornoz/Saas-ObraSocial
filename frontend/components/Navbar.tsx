@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { UserPen } from "lucide-react";
+import { UserPen, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   const { user, loading } = useAuth();
@@ -54,12 +54,22 @@ export default function Navbar() {
                 </button>
               )}
               {user && (
-                <Link
-                  href="/home-user/profile"
-                  className="mr-10 flex items-center gap-2 hover:opacity-80"
-                >
-                  <UserPen />
-                </Link>
+                <div className="mr-10 flex items-center gap-4">
+                  <Link
+                    href="/home-user"
+                    className="flex items-center gap-2 hover:opacity-80"
+                    title="Panel de control"
+                  >
+                    <LayoutDashboard />
+                  </Link>
+                  <Link
+                    href="/home-user/profile"
+                    className="flex items-center gap-2 hover:opacity-80"
+                    title="Perfil"
+                  >
+                    <UserPen />
+                  </Link>
+                </div>
               )}
             </>
           )}

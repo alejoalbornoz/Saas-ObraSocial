@@ -118,7 +118,7 @@ export default function Profile() {
       const res = await fetch(
         "http://localhost:4000/api/users/change-password",
         {
-          method: "PUT",
+          method: "PATCH",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(passwordForm),
