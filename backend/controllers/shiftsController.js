@@ -2,17 +2,10 @@ import { prisma } from "../config/prismaClient.js";
 
 import { ShiftStatus } from "@prisma/client";
 
-/**
- * Crear un turno médico
- * El paciente selecciona al médico por nombre y especialidad,
- * NO por ID.
- */
-
 export async function createShift(req, res) {
   const { doctorName, doctorLastName, specialty, date } = req.body;
 
   try {
-    // Validaciones básicas
     if (!doctorName || !specialty || !date) {
       return res.status(400).json({
         message: "Debe enviar el nombre del doctor, la especialidad y la fecha",
@@ -24,7 +17,6 @@ export async function createShift(req, res) {
       return res.status(400).json({ message: "La fecha es inválida" });
     }
 
-    // Buscar al médico (Doctor + User)
     const doctor = await prisma.doctor.findFirst({
       where: {
         specialty,
@@ -44,7 +36,6 @@ export async function createShift(req, res) {
       });
     }
 
-    // Verificar disponibilidad del médico
     const existingDoctorShift = await prisma.shift.findFirst({
       where: {
         doctorId: doctor.id,
@@ -58,7 +49,6 @@ export async function createShift(req, res) {
       });
     }
 
-    // Verificar disponibilidad del paciente
     const existingPatientShift = await prisma.shift.findFirst({
       where: {
         patientId: req.user.id,
@@ -72,7 +62,6 @@ export async function createShift(req, res) {
       });
     }
 
-    // Crear el turno
     const newShift = await prisma.shift.create({
       data: {
         date: shiftDate,
@@ -177,10 +166,9 @@ export async function cancelShift(req, res) {
 
 export async function confirmShift(req, res) {
   try {
-    const doctorUserId = req.user.id; // ID del usuario logueado (que es médico)
-    const { id } = req.params; // ID del turno a confirmar
+    const doctorUserId = req.user.id;
+    const { id } = req.params;
 
-    // Buscar el registro del médico asociado a este usuario
     const doctor = await prisma.doctor.findUnique({
       where: { userId: doctorUserId },
     });
@@ -228,10 +216,9 @@ export async function confirmShift(req, res) {
 
 export async function cancelShiftByDoctor(req, res) {
   try {
-    const doctorUserId = req.user.id; // ID del usuario logueado (médico)
-    const { id } = req.params; // ID del turno a cancelar
+    const doctorUserId = req.user.id;
+    const { id } = req.params;
 
-    // Buscar el médico asociado a este usuario
     const doctor = await prisma.doctor.findUnique({
       where: { userId: doctorUserId },
     });
@@ -242,7 +229,6 @@ export async function cancelShiftByDoctor(req, res) {
         .json({ message: "Solo los médicos pueden cancelar turnos." });
     }
 
-    // Encontrar el turno
     const shift = await prisma.shift.findUnique({
       where: { id: Number(id) },
     });
@@ -251,19 +237,16 @@ export async function cancelShiftByDoctor(req, res) {
       return res.status(404).json({ message: "Turno no encontrado." });
     }
 
-    // Verificar que el turno pertenezca a este médico
     if (shift.doctorId !== doctor.id) {
       return res.status(403).json({
         message: "No tenés permiso para cancelar este turno.",
       });
     }
 
-    // Validar que el turno no esté ya cancelado
     if (shift.status === ShiftStatus.CANCELADO) {
       return res.status(400).json({ message: "El turno ya está cancelado." });
     }
 
-    // Actualizar turno a CANCELADO
     const updatedShift = await prisma.shift.update({
       where: { id: shift.id },
       data: { status: ShiftStatus.CANCELADO },

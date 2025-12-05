@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { showToast } from "nextjs-toast-notify";
 
@@ -88,9 +88,7 @@ export default function HomeUser() {
 
   return (
     <main className="min-h-screen flex justify-center items-center bg-gray-50 p-6 md:p-10">
-      {/* Contenedor central grande */}
       <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-8 md:p-14">
-        {/* Header */}
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-md bg-blue-400 flex items-center justify-center text-white font-bold">
@@ -120,7 +118,6 @@ export default function HomeUser() {
           </p>
         </section>
 
-        {/* Grid de cards */}
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {cards.map((c) => (
@@ -131,7 +128,6 @@ export default function HomeUser() {
                 aria-label={c.title}
               >
                 <div className="flex items-center gap-5">
-                 
                   <div className="flex-none w-16 h-16 rounded-lg bg-blue-50 flex items-center justify-center text-3xl">
                     <span aria-hidden>{c.emoji}</span>
                   </div>
@@ -148,7 +144,6 @@ export default function HomeUser() {
           </div>
         </section>
 
-        {/* Nota inferior */}
         <footer className="mt-8 text-sm text-gray-500">
           <p>
             Si necesitás asistencia para gestionar autorizaciones o turnos,

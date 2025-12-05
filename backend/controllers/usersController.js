@@ -84,7 +84,7 @@ export async function loginUser(req, res) {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      path: "/", // 👈 SIN ESTO NO FUNCA EL PROXY
+      path: "/",
       maxAge: 3600000,
     });
 
@@ -99,8 +99,8 @@ export function logoutUser(req, res) {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false, // Match con el login para local
-      sameSite: "lax", // Match con el login para local
+      secure: false,
+      sameSite: "lax",
     });
 
     return res.json({ message: "Sesión cerrada correctamente" });
@@ -115,7 +115,6 @@ export async function updateUserInfo(req, res) {
     const userId = req.user.id;
     const dataUpdate = req.body;
 
-    // ❌ Campos que NO se pueden actualizar
     const forbiddenFields = ["id", "role"];
 
     for (let field of forbiddenFields) {
@@ -182,13 +181,11 @@ export async function changeOwnPassword(req, res) {
       where: { id: userId },
     });
 
-    // Verificar contraseña actual
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Contraseña actual incorrecta." });
     }
 
-    // Hashear nueva contraseña
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
@@ -222,13 +219,11 @@ export async function deleteUserAccount(req, res) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Verificar contraseña
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
-    // Eliminar usuario
     await prisma.user.delete({
       where: { id: userId },
     });
@@ -252,6 +247,7 @@ export async function getAllDoctors(req, res) {
             name: true,
             lastName: true,
             email: true,
+            location: true,
           },
         },
       },

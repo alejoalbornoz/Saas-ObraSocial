@@ -36,7 +36,6 @@ export default function Profile() {
   const [deletePassword, setDeletePassword] = useState("");
   const [deleting, setDeleting] = useState(false);
 
-  // Fetch de usuario
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -62,7 +61,6 @@ export default function Profile() {
     fetchUser();
   }, []);
 
-  // Manejo de inputs
   const handleInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInfoForm({ ...infoForm, [e.target.name]: e.target.value });
   };
@@ -71,7 +69,6 @@ export default function Profile() {
     setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
   };
 
-  // Guardar cambios de información
   const handleSaveInfo = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/users/update", {
@@ -94,7 +91,6 @@ export default function Profile() {
     }
   };
 
-  // LOGOUT
   const handleLogout = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/users/logout", {
@@ -112,7 +108,6 @@ export default function Profile() {
     }
   };
 
-  // Cambiar contraseña
   const handleChangePassword = async () => {
     try {
       const res = await fetch(
@@ -138,7 +133,6 @@ export default function Profile() {
     }
   };
 
-  // Eliminar cuenta
   const handleDeleteAccount = async () => {
     if (!confirm("¿Seguro que querés eliminar tu cuenta? No hay vuelta atrás."))
       return;
@@ -177,7 +171,6 @@ export default function Profile() {
 
   return (
     <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-xl">
-      {/* LOGOUT BUTTON */}
       <div className="flex justify-end mb-6">
         <button
           onClick={handleLogout}
@@ -189,7 +182,7 @@ export default function Profile() {
 
       <h1 className="text-3xl font-bold mb-6 text-blue-700">Mi Perfil</h1>
 
-      {/* DATOS DEL USUARIO */}
+    
       <section className="mb-10">
         <h2 className="text-xl font-semibold mb-4">Información personal</h2>
 
@@ -263,7 +256,6 @@ export default function Profile() {
         )}
       </section>
 
-      {/* CAMBIAR CONTRASEÑA */}
       <section className="mb-10">
         <h2 className="text-xl font-semibold mb-4">Cambiar contraseña</h2>
 
@@ -293,7 +285,6 @@ export default function Profile() {
         </button>
       </section>
 
-      {/* ELIMINAR CUENTA */}
       <section className="border-t pt-6">
         <h2 className="text-xl font-semibold text-red-600 mb-3">
           Eliminar cuenta

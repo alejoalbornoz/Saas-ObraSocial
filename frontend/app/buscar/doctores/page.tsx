@@ -1,6 +1,6 @@
 import SearchDoctor from "@/components/SearchDoctor";
 
-export default function page() {
+export default function SearchDoctorPage() {
   return (
     <>
       <SearchDoctor />

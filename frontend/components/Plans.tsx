@@ -74,7 +74,6 @@ export default function Plans() {
           entre facturación mensual o anual.
         </p>
 
-        {/* Billing toggle */}
         <div className="mt-6 inline-flex items-center rounded-full bg-white p-1 shadow-sm">
           <button
             onClick={() => setBilling("monthly")}

@@ -1,18 +1,17 @@
 import { prisma } from "../config/prismaClient.js";
 
-//   Cambiar rol de un usuario
-//  Solo ADMIN puede ejecutar esto.
+
 
 export async function updateUserRole(req, res) {
   const { userId, newRole, specialty, bio } = req.body;
 
   try {
-    // Verificar si quien hace la petición es ADMIN
+  
     if (req.user.role !== "ADMIN") {
       return res.status(403).json({ message: "No autorizado" });
     }
 
-    // Validar parámetros
+
     if (!userId || !newRole) {
       return res.status(400).json({
         message: "Debe enviar userId y newRole",
@@ -25,7 +24,6 @@ export async function updateUserRole(req, res) {
       });
     }
 
-    // Buscar usuario
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { doctor: true },
@@ -35,20 +33,20 @@ export async function updateUserRole(req, res) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Si pasa a MEDICO → necesita specialty
+ 
     if (newRole === "MEDICO" && !specialty) {
       return res.status(400).json({
         message: "Debe enviar specialty para crear un médico",
       });
     }
 
-    // 1️⃣ CAMBIO DE ROL
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { role: newRole },
     });
 
-    // 2️⃣ SI PASA A MEDICO → CREAR DOCTOR (si no existe)
+   
     if (newRole === "MEDICO") {
       if (!user.doctor) {
         await prisma.doctor.create({
@@ -59,7 +57,6 @@ export async function updateUserRole(req, res) {
           },
         });
       } else {
-        // Si ya era médico, actualizamos datos
         await prisma.doctor.update({
           where: { id: user.doctor.id },
           data: {
@@ -70,7 +67,6 @@ export async function updateUserRole(req, res) {
       }
     }
 
-    // 3️⃣ SI PASA A USUARIO → ELIMINAR DOCTOR
     if (newRole === "USUARIO" && user.doctor) {
       await prisma.doctor.delete({
         where: { id: user.doctor.id },

@@ -101,7 +101,7 @@ export default function RegisterPage() {
           <h1 className="text-3xl font-semibold mb-6">Crear tu cuenta</h1>
 
           <form onSubmit={handleSubmit} className="flex flex-col">
-            {/* Nombre */}
+          
             <label className="text-gray-700 font-medium">Nombre</label>
             <input
               type="text"
@@ -112,7 +112,7 @@ export default function RegisterPage() {
               className="w-full border border-gray-400 rounded-lg px-4 py-2 mt-1 mb-4 focus:outline-blue-500"
             />
 
-            {/* Apellido */}
+            
             <label className="text-gray-700 font-medium">Apellido</label>
             <input
               type="text"
@@ -123,7 +123,6 @@ export default function RegisterPage() {
               className="w-full border border-gray-400 rounded-lg px-4 py-2 mt-1 mb-4 focus:outline-blue-500"
             />
 
-            {/* DNI */}
             <label className="text-gray-700 font-medium">DNI</label>
             <input
               type="text"
@@ -135,7 +134,7 @@ export default function RegisterPage() {
               className="w-full border border-gray-400 rounded-lg px-4 py-2 mt-1 mb-4 focus:outline-blue-500"
             />
 
-            {/* Email */}
+
             <label className="text-gray-700 font-medium">Email</label>
             <input
               type="email"
@@ -146,7 +145,6 @@ export default function RegisterPage() {
               className="w-full border border-gray-400 rounded-lg px-4 py-2 mt-1 mb-4 focus:outline-blue-500"
             />
 
-            {/* Password */}
             <label className="text-gray-700 font-medium">Contraseña</label>
             <div className="relative mt-1 mb-4">
               <input
@@ -166,7 +164,7 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            {/* Repeat password */}
+
             <label className="text-gray-700 font-medium">
               Repetir contraseña
             </label>
@@ -188,7 +186,7 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            {/* Botón crear cuenta */}
+
             <button
               type="submit"
               className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-2 text-lg font-medium"
@@ -197,7 +195,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          {/* Ya tiene cuenta */}
+
           <p className="text-center text-sm mt-4">
             ¿Ya tenés cuenta?{" "}
             <Link
@@ -208,10 +206,9 @@ export default function RegisterPage() {
             </Link>
           </p>
 
-          {/* Separador */}
+
           <div className="my-6 border-b"></div>
 
-          {/* Social logins */}
           <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-3 flex items-center justify-center gap-2 hover:bg-gray-50">
             <Image src="/google.png" alt="google" width={20} height={20} />
             Registrarte con Google
@@ -225,7 +222,7 @@ export default function RegisterPage() {
             Registrarte con Apple
           </button>
 
-          {/* Links de ayuda */}
+
           <div className="mt-8 text-sm flex flex-col gap-2 text-center">
             <Link href="#" className="text-blue-700 hover:underline">
               Resolvé tus dudas

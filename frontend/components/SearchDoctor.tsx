@@ -12,6 +12,7 @@ type Doctor = {
     name: string;
     lastName: string;
     email: string;
+    location: string | null;
   };
 };
 
@@ -25,7 +26,6 @@ export default function SearchDoctor() {
   useEffect(() => {
     async function checkUser() {
       try {
-        // 👉 Primero pedir al usuario
         const userRes = await fetch("http://localhost:4000/api/users/me", {
           credentials: "include",
         });
@@ -40,7 +40,7 @@ export default function SearchDoctor() {
         ) {
           alreadyRedirected.current = true;
           router.replace("/planes");
-          return; // Cancelar ejecución
+          return;
         }
 
         const docRes = await fetch("http://localhost:4000/api/users/doctors", {
@@ -49,7 +49,6 @@ export default function SearchDoctor() {
 
         if (docRes.ok) {
           const docData = await docRes.json();
-          console.log("Doctors Data:", docData);
           setDoctors(docData);
         }
       } catch (error) {
@@ -88,6 +87,9 @@ export default function SearchDoctor() {
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
                   Especialidad: <strong>{doctor.specialty}</strong>
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Ubicación: <strong>{doctor.user.location}</strong>
                 </p>
                 <p className="text-gray-700 mt-3 text-sm">{doctor.bio}</p>
               </div>

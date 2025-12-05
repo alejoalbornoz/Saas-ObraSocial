@@ -4,7 +4,6 @@ import React from "react";
 export default function Hero() {
   return (
     <div className="relative h-[80vh] overflow-hidden">
-      {/* Imagen blurreada */}
       <Image
         src="/hospital.jpg"
         alt="Hospital"
@@ -13,7 +12,6 @@ export default function Hero() {
         priority
       />
 
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/30" />
 
       <div className="h-full flex items-center justify-center px-10 relative overflow-hidden">
@@ -22,8 +20,6 @@ export default function Hero() {
           <div className="absolute top-10 left-10 w-16 h-16 bg-blue-300/30 rounded-full blur-sm" />
           <div className="absolute bottom-20 right-20 w-28 h-28 bg-blue-300/30 rounded-full blur-sm" />
           <div className="absolute top-1/2 left-1/3 w-12 h-12 bg-blue-300/30 rounded-full blur-sm" />
-
-          {/* nuevos lunares */}
           <div className="absolute top-5 right-1/4 w-12 h-12 bg-blue-300/25 rounded-full blur-sm" />
           <div className="absolute bottom-10 left-1/4 w-20 h-20 bg-blue-300/20 rounded-full blur-sm" />
           <div className="absolute top-1/4 right-10 w-8 h-8 bg-blue-300/30 rounded-full blur-sm" />
@@ -31,7 +27,6 @@ export default function Hero() {
           <div className="absolute top-2/3 left-5 w-16 h-16 bg-blue-300/20 rounded-full blur-sm" />
         </div>
 
-        {/* Contenido */}
         <div className="flex flex-col gap-6 w-[50%] z-10 text-center">
           <h1 className="text-[100px] font-bold leading-tight text-white drop-shadow-lg">
             Tu Obra Social de confianza

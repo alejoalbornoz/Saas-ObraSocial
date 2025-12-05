@@ -23,7 +23,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // 👈 OBLIGATORIO PARA QUE GUARDE LA COOKIE
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -50,7 +50,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2">
-      {/* COL IZQUIERDA – FORM */}
       <div className="flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-10">
         {/* Logo */}
         <div className="mb-10">
@@ -59,14 +58,12 @@ export default function Login() {
 
         <h1 className="text-3xl font-semibold mb-6">Iniciá sesión</h1>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
 
-        {/* Email */}
         <label className="text-gray-700 font-medium">Email</label>
         <input
           type="email"
@@ -78,7 +75,6 @@ export default function Login() {
           required
         />
 
-        {/* Password */}
         <label className="text-gray-700 font-medium">Contraseña</label>
         <div className="relative mt-1">
           <input
@@ -99,7 +95,6 @@ export default function Login() {
           </button>
         </div>
 
-        {/* Botón ingresar */}
         <button
           onClick={handleLogin}
           disabled={loading}
@@ -108,7 +103,6 @@ export default function Login() {
           {loading ? "Ingresando..." : "Ingresar"}
         </button>
 
-        {/* Recuperación */}
         <div className="flex justify-between text-sm mt-3 text-blue-700">
           <a href="#" className="hover:underline">
             ¿Olvidaste tu email?
@@ -118,10 +112,8 @@ export default function Login() {
           </a>
         </div>
 
-        {/* Separador */}
         <div className="my-6 border-b"></div>
 
-        {/* Social logins */}
         <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-3 flex items-center justify-center gap-2 hover:bg-gray-50">
           <Image src="/google.png" alt="google" width={20} height={20} />
           Continuar con Google
@@ -137,7 +129,6 @@ export default function Login() {
           Continuar con Apple
         </button>
 
-        {/* Crear cuenta */}
         <p className="text-center text-sm">
           ¿No tenés cuenta?{" "}
           <Link
@@ -148,7 +139,6 @@ export default function Login() {
           </Link>
         </p>
 
-        {/* Links de ayuda */}
         <div className="mt-8 text-sm flex flex-col gap-2 text-center">
           <a href="#" className="text-blue-700 hover:underline">
             Resolvé tus dudas
@@ -162,7 +152,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* COL DERECHA – IMAGEN */}
       <div className="hidden md:block relative">
         <Image
           src="/doctor.jpg"

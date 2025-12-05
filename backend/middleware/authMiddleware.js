@@ -16,7 +16,7 @@ export async function verifyToken(req, res, next) {
 
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    // 🔥 Verificar que el usuario existe realmente
+
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
     });

@@ -1,7 +1,6 @@
 export default function About() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center mt-10 bg-gray-50 px-6 py-20">
-      {/* Contenedor principal */}
       <div className="max-w-4xl text-center flex flex-col gap-10">
         <h1 className="text-4xl font-bold text-gray-900">¿Quiénes somos?</h1>
 
@@ -12,7 +11,6 @@ export default function About() {
           que ser simple, eficiente y cercana.
         </p>
 
-        {/* Cards de valores */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
           <div className="bg-white p-6 rounded-xl shadow-sm border">
             <h3 className="text-xl font-semibold mb-3 text-blue-600">Misión</h3>
@@ -40,7 +38,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* Sección extra */}
         <div className="mt-16 bg-white p-10 rounded-xl shadow-sm border text-left">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Nuestro compromiso

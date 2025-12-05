@@ -12,7 +12,6 @@ export default function Navbar() {
     <nav>
       <div className="text-black bg-white fixed w-full top-0 left-0 z-40 shadow-md">
         <div className="flex justify-between items-center px-4 sm:px-6 py-4 text-[16px] sm:text-[18px] md:text-[20px]">
-          {/* LOGO */}
           <a href="" className="flex items-center gap-2 z-50 ml-10">
             <Image
               src="/iconsalud.png"
@@ -25,7 +24,6 @@ export default function Navbar() {
             </Link>
           </a>
 
-          {/* LINKS CENTRALES */}
           <div className="flex-1 flex justify-center">
             <ul className="flex gap-8 items-center text-[18px] sm:text-[20px] text-blue-700 font-semibold">
               <li>

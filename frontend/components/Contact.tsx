@@ -13,21 +13,18 @@ export default function Contact() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl w-full px-6">
-        {/* Email */}
         <div className="flex flex-col items-center text-center gap-3 bg-blue-50 p-8 rounded-2xl shadow-sm">
           <Mail className="w-8 h-8 text-blue-600" />
           <h3 className="text-lg font-semibold text-gray-800">Email</h3>
           <p className="text-gray-600 text-sm">soporte@obrasocialplus.com</p>
         </div>
 
-        {/* Teléfono */}
         <div className="flex flex-col items-center text-center gap-3 bg-blue-50 p-8 rounded-2xl shadow-sm">
           <Phone className="w-8 h-8 text-blue-600" />
           <h3 className="text-lg font-semibold text-gray-800">Teléfono</h3>
           <p className="text-gray-600 text-sm">0800-555-1234</p>
         </div>
 
-        {/* Dirección */}
         <div className="flex flex-col items-center text-center gap-3 bg-blue-50 p-8 rounded-2xl shadow-sm">
           <MapPin className="w-8 h-8 text-blue-600" />
           <h3 className="text-lg font-semibold text-gray-800">Oficina</h3>
@@ -35,7 +32,6 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Formulario */}
       <div className="max-w-3xl w-full px-6 bg-gray-50 p-10 rounded-2xl shadow-md">
         <h3 className="text-xl font-semibold text-gray-800 text-center mb-6">
           Envíanos un mensaje
