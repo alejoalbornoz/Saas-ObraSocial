@@ -260,6 +260,26 @@ export async function getAllDoctors(req, res) {
   }
 }
 
+export async function getDoctorById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: Number(id) },
+      include: {
+        user: {
+          select: { id: true, name: true, lastName: true, email: true },
+        },
+      },
+    });
+
+    return res.json({ doctor });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error al obtener el doctor" });
+  }
+}
+
 export async function getMe(req, res) {
   try {
     const user = await prisma.user.findUnique({

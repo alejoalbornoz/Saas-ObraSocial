@@ -7,6 +7,7 @@ import {
   changeOwnPassword,
   deleteUserAccount,
   getAllDoctors,
+  getDoctorById,
   getMe,
 } from "../controllers/usersController.js";
 
@@ -18,6 +19,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.get("/doctors", verifyToken, getAllDoctors);
+router.get("/doctors/:id", verifyToken, getDoctorById);
 router.get("/me", verifyToken, getMe);
 router.patch("/update", verifyToken, updateUserInfo);
 router.patch("/change-password", verifyToken, changeOwnPassword);

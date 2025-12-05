@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Doctor = {
   id: number;
@@ -76,23 +77,29 @@ export default function SearchDoctor() {
             Buscar Médicos
           </h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 cursor-pointer">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {doctors.map((doctor) => (
-              <div
+              <Link
+                href={`/buscar/doctores/${doctor.id}`}
                 key={doctor.id}
-                className="border rounded-xl p-6 shadow-sm bg-white hover:shadow-md transition"
+                className="border rounded-xl p-6 shadow-sm bg-white hover:shadow-md hover:-translate-y-1 transition block"
               >
                 <h2 className="text-xl font-semibold text-blue-700">
                   {doctor.user.name} {doctor.user.lastName}
                 </h2>
+
                 <p className="text-sm text-gray-500 mt-1">
                   Especialidad: <strong>{doctor.specialty}</strong>
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  Ubicación: <strong>{doctor.user.location}</strong>
-                </p>
+
+                {doctor.user.location && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Ubicación: <strong>{doctor.user.location}</strong>
+                  </p>
+                )}
+
                 <p className="text-gray-700 mt-3 text-sm">{doctor.bio}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
