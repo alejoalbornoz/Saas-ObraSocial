@@ -11,7 +11,7 @@ type Doctor = {
     id: number;
     name: string;
     lastName: string;
-    email: string;
+    location: string | null;
   };
 };
 
@@ -38,9 +38,12 @@ export default function DoctorProfile() {
   useEffect(() => {
     async function fetchDoctor() {
       try {
-        const res = await fetch(`http://localhost:4000/api/users/doctors/${id}`, {
-          credentials: "include",
-        });
+        const res = await fetch(
+          `http://localhost:4000/api/users/doctors/${id}`,
+          {
+            credentials: "include",
+          }
+        );
 
         const data = await res.json();
         setDoctor(data.doctor);
@@ -55,8 +58,7 @@ export default function DoctorProfile() {
   }, [id]);
 
   async function handleCreateShift() {
-    if (!selectedDate || !selectedHour)
-      return alert("Seleccioná fecha y hora");
+    if (!selectedDate || !selectedHour) return alert("Seleccioná fecha y hora");
 
     const dateTime = `${selectedDate}T${selectedHour}:00`;
 
@@ -90,8 +92,8 @@ export default function DoctorProfile() {
         </h1>
         <p className="text-gray-600 mt-2 text-lg">{doctor.specialty}</p>
         <p className="mt-4 text-gray-700">{doctor.bio}</p>
+        <p className="mt-4 text-gray-700">{doctor.user.location}</p>
 
-        {/* Selección de día */}
         <div className="mt-8">
           <label className="font-semibold text-gray-700">Elegir día:</label>
           <input
@@ -102,11 +104,8 @@ export default function DoctorProfile() {
           />
         </div>
 
-        {/* Selección de horario */}
         <div className="mt-8">
-          <label className="font-semibold text-gray-700">
-            Elegir horario:
-          </label>
+          <label className="font-semibold text-gray-700">Elegir horario:</label>
 
           <div className="grid grid-cols-3 gap-3 mt-3">
             {availableHours.map((hour) => (
@@ -125,7 +124,6 @@ export default function DoctorProfile() {
           </div>
         </div>
 
-        {/* Botón solicitar */}
         <button
           onClick={handleCreateShift}
           className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3 rounded-lg"
