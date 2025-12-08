@@ -99,7 +99,7 @@ export default function Profile() {
       });
 
       if (res.ok) {
-        router.push("/login");
+        window.location.href = "/login";
       } else {
         alert("Error al cerrar sesión");
       }
@@ -182,7 +182,6 @@ export default function Profile() {
 
       <h1 className="text-3xl font-bold mb-6 text-blue-700">Mi Perfil</h1>
 
-    
       <section className="mb-10">
         <h2 className="text-xl font-semibold mb-4">Información personal</h2>
 

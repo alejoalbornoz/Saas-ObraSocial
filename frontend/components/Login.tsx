@@ -35,7 +35,7 @@ export default function Login() {
         return;
       }
 
-      router.push("/home-user");
+      window.location.href = "/home-user";
     } catch (err) {
       setError("Error de conexión. Intenta nuevamente.");
       setLoading(false);

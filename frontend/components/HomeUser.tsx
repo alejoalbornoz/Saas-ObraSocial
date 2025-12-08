@@ -62,6 +62,7 @@ export default function HomeUser() {
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
+      
 
           if (!redirected && data.user.afiliation === "NO_AFILIADO") {
             redirected = true;
