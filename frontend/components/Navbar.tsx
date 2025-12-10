@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { UserPen, LayoutDashboard } from "lucide-react";
+import { UserPen, LayoutDashboard, ClipboardClock } from "lucide-react";
 
 export default function Navbar() {
   const { user, loading } = useAuth();
@@ -66,6 +66,13 @@ export default function Navbar() {
                     title="Perfil"
                   >
                     <UserPen />
+                  </Link>
+                  <Link
+                    href="/buscar/turnos"
+                    className="flex items-center gap-2 hover:opacity-80"
+                    title="Buscar turnos"
+                  >
+                    <ClipboardClock />
                   </Link>
                 </div>
               )}

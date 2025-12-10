@@ -290,6 +290,7 @@ export async function getMe(req, res) {
         name: true,
         lastName: true,
         DNI: true,
+        role: true,
         afiliation: true,
       },
     });

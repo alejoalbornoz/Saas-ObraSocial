@@ -17,6 +17,21 @@ export async function createShift(req, res) {
       return res.status(400).json({ message: "La fecha es inválida" });
     }
 
+    const day = shiftDate.getDay();
+    if (day === 0 || day === 6) {
+      return res.status(400).json({
+        message: "Solo se pueden pedir turnos de lunes a viernes",
+      });
+    }
+
+    const hour = shiftDate.getHours();
+    if (hour < 9 || hour > 18) {
+      return res.status(400).json({
+        message: "El horario debe ser entre las 9:00 y 18:00",
+      });
+    }
+
+
     const doctor = await prisma.doctor.findFirst({
       where: {
         specialty,
@@ -25,9 +40,7 @@ export async function createShift(req, res) {
           ...(doctorLastName && { lastName: doctorLastName }),
         },
       },
-      include: {
-        user: true,
-      },
+      include: { user: true },
     });
 
     if (!doctor) {
@@ -36,6 +49,7 @@ export async function createShift(req, res) {
       });
     }
 
+ 
     const existingDoctorShift = await prisma.shift.findFirst({
       where: {
         doctorId: doctor.id,
@@ -70,9 +84,7 @@ export async function createShift(req, res) {
       },
       include: {
         patient: true,
-        doctor: {
-          include: { user: true },
-        },
+        doctor: { include: { user: true } },
       },
     });
 
@@ -83,6 +95,43 @@ export async function createShift(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error al crear el turno" });
+  }
+}
+
+export async function getAvailableHours(req, res) {
+  const { doctorId } = req.params;
+  const { date } = req.query;
+
+  try {
+    const baseDate = new Date(date);
+    if (isNaN(baseDate.getTime())) {
+      return res.status(400).json({ message: "Fecha inválida" });
+    }
+
+    
+    const hours = [];
+    for (let h = 9; h <= 18; h++) {
+      hours.push(h);
+    }
+
+    const shifts = await prisma.shift.findMany({
+      where: {
+        doctorId: Number(doctorId),
+        date: {
+          gte: new Date(`${date}T00:00:00`),
+          lt: new Date(`${date}T23:59:59`),
+        },
+      },
+    });
+
+    const reservedHours = shifts.map((s) => new Date(s.date).getHours());
+
+    const availableHours = hours.filter((h) => !reservedHours.includes(h));
+
+    return res.json({ availableHours });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error" });
   }
 }
 
@@ -112,7 +161,6 @@ export async function getShiftById(req, res) {
       return res.status(404).json({ message: "Turno no encontrado" });
     }
 
-    // Permisos
     const isPatient = shift.patientId === userId;
     const isDoctor = shift.doctor.userId === userId;
     const isAdmin = userRole === "ADMIN";
@@ -126,6 +174,74 @@ export async function getShiftById(req, res) {
     return res.json(shift);
   } catch (error) {
     console.error("Error al obtener turno:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+}
+
+export async function getMyShifts(req, res) {
+  try {
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    let shifts = [];
+
+    if (userRole === "USUARIO") {
+      shifts = await prisma.shift.findMany({
+        where: { patientId: userId },
+        orderBy: { date: "desc" },
+        include: {
+          patient: {
+            select: { id: true, name: true, lastName: true, email: true },
+          },
+          doctor: {
+            include: {
+              user: {
+                select: { id: true, name: true, lastName: true, email: true },
+              },
+            },
+          },
+        },
+      });
+    } else if (userRole === "MEDICO") {
+      shifts = await prisma.shift.findMany({
+        where: {
+          doctor: { userId: userId },
+        },
+        orderBy: { date: "desc" },
+        include: {
+          patient: {
+            select: { id: true, name: true, lastName: true, email: true },
+          },
+          doctor: {
+            include: {
+              user: {
+                select: { id: true, name: true, lastName: true, email: true },
+              },
+            },
+          },
+        },
+      });
+    } else if (userRole === "ADMIN") {
+      shifts = await prisma.shift.findMany({
+        orderBy: { date: "desc" },
+        include: {
+          patient: {
+            select: { id: true, name: true, lastName: true, email: true },
+          },
+          doctor: {
+            include: {
+              user: {
+                select: { id: true, name: true, lastName: true, email: true },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    return res.json(shifts);
+  } catch (error) {
+    console.error("Error al obtener turnos:", error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
