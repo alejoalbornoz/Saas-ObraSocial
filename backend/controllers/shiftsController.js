@@ -280,6 +280,46 @@ export async function cancelShift(req, res) {
   }
 }
 
+
+export async function cancelMyShift(req, res) {
+   try {
+    const userId = req.user.id;
+    const { shiftId } = req.body;
+
+    if (!shiftId) {
+      return res.status(400).json({ message: "Falta el shiftId" });
+    }
+
+    const shift = await prisma.shift.findUnique({
+      where: { id: Number(shiftId) },
+    });
+
+    if (!shift) {
+      return res.status(404).json({ message: "El turno no existe" });
+    }
+
+    if (shift.patientId !== userId) {
+      return res.status(403).json({
+        message: "No tenés permiso para cancelar este turno",
+      });
+    }
+
+    const updatedShift = await prisma.shift.update({
+      where: { id: Number(shiftId) },
+      data: { status: "CANCELADO" },
+    });
+
+    return res.json({
+      message: "Turno cancelado exitosamente",
+      turno: updatedShift,
+    });
+  } catch (error) {
+    console.error("Error al cancelar turno:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+}
+
+
 export async function confirmShift(req, res) {
   try {
     const doctorUserId = req.user.id;
