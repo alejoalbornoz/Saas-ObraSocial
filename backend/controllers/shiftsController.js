@@ -31,7 +31,6 @@ export async function createShift(req, res) {
       });
     }
 
-
     const doctor = await prisma.doctor.findFirst({
       where: {
         specialty,
@@ -49,7 +48,6 @@ export async function createShift(req, res) {
       });
     }
 
- 
     const existingDoctorShift = await prisma.shift.findFirst({
       where: {
         doctorId: doctor.id,
@@ -108,7 +106,6 @@ export async function getAvailableHours(req, res) {
       return res.status(400).json({ message: "Fecha inválida" });
     }
 
-    
     const hours = [];
     for (let h = 9; h <= 18; h++) {
       hours.push(h);
@@ -194,9 +191,17 @@ export async function getMyShifts(req, res) {
             select: { id: true, name: true, lastName: true, email: true },
           },
           doctor: {
-            include: {
+            select: {
+              specialty: true,
+              bio: true,
               user: {
-                select: { id: true, name: true, lastName: true, email: true },
+                select: {
+                  id: true,
+                  name: true,
+                  lastName: true,
+                  email: true,
+                  location: true,
+                },
               },
             },
           },
@@ -280,9 +285,8 @@ export async function cancelShift(req, res) {
   }
 }
 
-
 export async function cancelMyShift(req, res) {
-   try {
+  try {
     const userId = req.user.id;
     const { shiftId } = req.body;
 
@@ -318,7 +322,6 @@ export async function cancelMyShift(req, res) {
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 }
-
 
 export async function confirmShift(req, res) {
   try {

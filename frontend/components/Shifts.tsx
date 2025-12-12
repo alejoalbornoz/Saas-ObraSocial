@@ -7,10 +7,11 @@ type DoctorUser = {
   id: number;
   name: string;
   lastName: string;
-  email: string;
+  location: string;
 };
 
 type Doctor = {
+  specialty: string; 
   user: DoctorUser;
 };
 
@@ -80,7 +81,6 @@ export default function Shifts() {
         throw new Error("No se pudo cancelar el turno");
       }
 
-      // Actualizar la lista local sin hacer otro GET
       setShifts((prev) =>
         prev.map((shift) =>
           shift.id === shiftId ? { ...shift, status: "CANCELADO" } : shift
@@ -104,12 +104,12 @@ export default function Shifts() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto h-screen flex justify-center items-center flex-col">
-      <h1 className="text-3xl font-bold mb-6 ">Mis Turnos</h1>
+      <h1 className="text-3xl font-bold mb-6 mt-10 ">Mis Turnos</h1>
 
       {shifts.length === 0 ? (
         <p className="text-gray-600">No tenés turnos cargados.</p>
       ) : (
-        <div className="space-y-4">
+        <div className=" grid grid-cols-2 gap-4 p-4">
           {shifts.map((shift) => (
             <div
               key={shift.id}
@@ -141,13 +141,30 @@ export default function Shifts() {
               </p>
 
               {shift.doctor && (
-                <p className="mt-2">
+                <p className="mt-2 ">
                   Doctor:{" "}
                   <span className="font-medium">
                     {shift.doctor.user.name} {shift.doctor.user.lastName}
                   </span>
                 </p>
               )}
+
+              {shift.doctor && (
+                <p className="mt-2 ">
+                  Ubicacion:{" "}
+                  <span className="font-medium">
+                    {shift.doctor.user.location}
+                  </span>
+                </p>
+              )}
+
+              {shift.doctor && (
+                <p className="mt-2 ">
+                  Especialidad:{" "}
+                  <span className="font-medium">{shift.doctor.specialty}</span>
+                </p>
+              )}
+
               {shift.patient && (
                 <p className="mt-2">
                   Paciente:{" "}
@@ -157,25 +174,16 @@ export default function Shifts() {
                 </p>
               )}
 
-              <div className="flex justify-between">
-                <Link
-                  href={`/turnos/${shift.id}`}
-                  className="text-blue-600 underline mt-3 inline-block"
-                >
-                  Ver detalles
-                </Link>
-
-                {shift.status !== "CANCELADO" &&
-                  shift.status !== "FINALIZADO" &&
-                  shift.status !== "RECHAZADO" && (
-                    <button
-                      onClick={() => cancelShift(shift.id)}
-                      className="bg-red-600 px-3 py-2 rounded-md text-white hover:bg-red-700 transition"
-                    >
-                      Cancelar turno
-                    </button>
-                  )}
-              </div>
+              {shift.status !== "CANCELADO" &&
+                shift.status !== "FINALIZADO" &&
+                shift.status !== "RECHAZADO" && (
+                  <button
+                    onClick={() => cancelShift(shift.id)}
+                    className="bg-red-600 px-3 py-2 mt-3 rounded-md text-white hover:bg-red-700 transition"
+                  >
+                    Cancelar turno
+                  </button>
+                )}
             </div>
           ))}
         </div>
