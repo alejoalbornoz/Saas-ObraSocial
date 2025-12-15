@@ -292,6 +292,14 @@ export async function getMe(req, res) {
         DNI: true,
         role: true,
         afiliation: true,
+
+        doctor: {
+          select: {
+            id: true,
+            specialty: true,
+            bio: true,
+          },
+        },
       },
     });
 
