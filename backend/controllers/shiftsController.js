@@ -421,57 +421,57 @@ export async function cancelShiftByDoctor(req, res) {
   }
 }
 
-export async function getDoctorShifts(req, res) {
-  try {
-    const userId = req.user.id; // ID del usuario autenticado
+// export async function getDoctorShifts(req, res) {
+//   try {
+//     const userId = req.user.id; // ID del usuario autenticado
 
-    // Obtenemos el doctor asociado al usuario
-    const doctor = await prisma.doctor.findUnique({
-      where: { userId: userId },
-    });
+//     // Obtenemos el doctor asociado al usuario
+//     const doctor = await prisma.doctor.findUnique({
+//       where: { userId: userId },
+//     });
 
-    if (!doctor) {
-      return res
-        .status(404)
-        .json({ message: "El usuario no está registrado como médico." });
-    }
+//     if (!doctor) {
+//       return res
+//         .status(404)
+//         .json({ message: "El usuario no está registrado como médico." });
+//     }
 
-    // Traemos todos los turnos del doctor
-    const shifts = await prisma.shift.findMany({
-      where: { doctorId: doctor.id },
-      orderBy: { date: "desc" },
-      include: {
-        patient: {
-          select: {
-            id: true,
-            name: true,
-            lastName: true,
-            DNI: true,
-            email: true,
-          },
-        },
-        doctor: {
-          select: {
-            id: true,
-            specialty: true,
-            bio: true,
-            user: {
-              select: {
-                id: true,
-                name: true,
-                lastName: true,
-                email: true,
-                location: true,
-              },
-            },
-          },
-        },
-      },
-    });
+//     // Traemos todos los turnos del doctor
+//     const shifts = await prisma.shift.findMany({
+//       where: { doctorId: doctor.id },
+//       orderBy: { date: "desc" },
+//       include: {
+//         patient: {
+//           select: {
+//             id: true,
+//             name: true,
+//             lastName: true,
+//             DNI: true,
+//             email: true,
+//           },
+//         },
+//         doctor: {
+//           select: {
+//             id: true,
+//             specialty: true,
+//             bio: true,
+//             user: {
+//               select: {
+//                 id: true,
+//                 name: true,
+//                 lastName: true,
+//                 email: true,
+//                 location: true,
+//               },
+//             },
+//           },
+//         },
+//       },
+//     });
 
-    return res.json(shifts);
-  } catch (error) {
-    console.error("Error al obtener turnos del doctor:", error);
-    return res.status(500).json({ message: "Error interno del servidor" });
-  }
-}
+//     return res.json(shifts);
+//   } catch (error) {
+//     console.error("Error al obtener turnos del doctor:", error);
+//     return res.status(500).json({ message: "Error interno del servidor" });
+//   }
+// }
