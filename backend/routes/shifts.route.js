@@ -8,7 +8,7 @@ import {
   getMyShifts,
   getAvailableHours,
   cancelMyShift,
-  // getDoctorShifts,
+  getDoctorShifts,
 } from "../controllers/shiftsController.js";
 import {
   verifyToken,
@@ -20,7 +20,7 @@ const router = Router();
 
 router.post("/create", verifyToken, createShift);
 router.get("/mine", verifyToken, getMyShifts);
-// router.get("/doctor/my-shifts", verifyToken, getDoctorShifts);
+router.get("/doctor/my-shifts", verifyToken, getDoctorShifts);
 router.get("/:id", verifyToken, getShiftById);
 router.get("/available/:doctorId", verifyToken, getAvailableHours);
 router.patch("/cancelmyshift", verifyToken, cancelMyShift);
