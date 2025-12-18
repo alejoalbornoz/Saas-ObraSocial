@@ -9,7 +9,7 @@ import {
   getAvailableHours,
   cancelMyShift,
   getDoctorShifts,
-} from "../controllers/shiftsController.js";
+} from "../controllers/shifts.controller.js";
 import {
   verifyToken,
   verifyDoctor,

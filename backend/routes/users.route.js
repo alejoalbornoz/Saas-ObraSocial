@@ -9,7 +9,7 @@ import {
   getAllDoctors,
   getDoctorById,
   getMe,
-} from "../controllers/usersController.js";
+} from "../controllers/users.controller.js";
 
 import { verifyToken } from "../middleware/authMiddleware.js";
 

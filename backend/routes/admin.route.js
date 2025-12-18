@@ -3,7 +3,7 @@ import {
   updateUserRole,
   getUserById,
   getAllUsers,
-} from "../controllers/adminController.js";
+} from "../controllers/admin.controller.js";
 import { verifyAdmin, verifyToken } from "../middleware/authMiddleware.js";
 
 const router = Router();

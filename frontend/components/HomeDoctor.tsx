@@ -92,7 +92,7 @@ export default function HomeDoctor() {
               <span
                 className={`px-3 py-1 ml-5 text-1xl font-semibold rounded-full ${
                   shift.status === "PENDIENTE"
-                    ? "bg-yellow-100 text-yellow-700"
+                    ? "bg-yellow-100 text-yellow-700" 
                     : shift.status === "CONFIRMADO"
                     ? "bg-green-100 text-green-700"
                     : shift.status === "CANCELADO"
