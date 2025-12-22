@@ -4,7 +4,7 @@ import {
   createSubscription,
   cancelSubscription,
 } from "../controllers/suscriptions.controller.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 

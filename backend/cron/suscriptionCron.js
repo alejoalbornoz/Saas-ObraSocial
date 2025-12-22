@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import { prisma } from "../config/prismaClient.js";
+import { prisma } from "../config/prismaClient.config.js";
 
-// Ejecutar todos los días a las 00:00 
+// Ejecutar todos los días a las 00:00
 //Simulacion de cobro y renovacion de suscripciones
 cron.schedule("0 0 * * *", async () => {
   console.log("🔄 Ejecutando CRON de renovaciones de suscripción...");
@@ -25,9 +25,9 @@ cron.schedule("0 0 * * *", async () => {
     await prisma.subscription.update({
       where: { id: sub.id },
       data: {
-        nextBilling: nextMonth,       // próxima fecha de pago
-        endDate: null,                // sigue activa
-        status: "ACTIVE",             // por si se marcó distinto
+        nextBilling: nextMonth, // próxima fecha de pago
+        endDate: null, // sigue activa
+        status: "ACTIVE", // por si se marcó distinto
       },
     });
 

@@ -11,7 +11,7 @@ import {
   getMe,
 } from "../controllers/users.controller.js";
 
-import { verifyToken } from "../middleware/authMiddleware.js";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 

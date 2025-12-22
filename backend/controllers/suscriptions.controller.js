@@ -1,4 +1,4 @@
-import { prisma } from "../config/prismaClient.js";
+import { prisma } from "../config/prismaClient.config.js";
 import { AfiliationPlan, SubscriptionStatus } from "@prisma/client";
 
 export async function createSubscription(req, res) {

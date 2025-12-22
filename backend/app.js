@@ -9,6 +9,7 @@ import usersRouter from "./routes/users.route.js";
 import shiftsRouter from "./routes/shifts.route.js";
 import adminRouter from "./routes/admin.route.js";
 import suscriptionsRouter from "./routes/suscriptions.route.js";
+// import paymentsRouter from "./routes/payments.route.js";
 
 export const app = express();
 
@@ -27,3 +28,4 @@ app.use("/api/users", usersRouter);
 app.use("/api/shifts", shiftsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/suscriptions", suscriptionsRouter);
+// app.use("/api/payments", paymentsRouter);

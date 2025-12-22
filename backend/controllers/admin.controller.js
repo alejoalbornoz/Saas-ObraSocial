@@ -1,16 +1,12 @@
-import { prisma } from "../config/prismaClient.js";
-
-
+import { prisma } from "../config/prismaClient.config.js";
 
 export async function updateUserRole(req, res) {
   const { userId, newRole, specialty, bio } = req.body;
 
   try {
-  
     if (req.user.role !== "ADMIN") {
       return res.status(403).json({ message: "No autorizado" });
     }
-
 
     if (!userId || !newRole) {
       return res.status(400).json({
@@ -33,20 +29,17 @@ export async function updateUserRole(req, res) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
- 
     if (newRole === "MEDICO" && !specialty) {
       return res.status(400).json({
         message: "Debe enviar specialty para crear un médico",
       });
     }
 
-
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { role: newRole },
     });
 
-   
     if (newRole === "MEDICO") {
       if (!user.doctor) {
         await prisma.doctor.create({

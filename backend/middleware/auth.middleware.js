@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/envconfig.js";
+import { JWT_SECRET } from "../config/env.config.js";
 
-import { prisma } from "../config/prismaClient.js";
+import { prisma } from "../config/prismaClient.config.js";
 import { SubscriptionStatus } from "@prisma/client";
 
 export async function verifyToken(req, res, next) {
@@ -15,7 +15,6 @@ export async function verifyToken(req, res, next) {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
@@ -31,7 +30,6 @@ export async function verifyToken(req, res, next) {
     return res.status(401).json({ message: "Token inválido o expirado" });
   }
 }
-
 
 export function verifyAdmin(req, res, next) {
   if (!req.user) {
@@ -49,12 +47,13 @@ export function verifyAdmin(req, res, next) {
 export async function verifyDoctor(req, res, next) {
   await verifyToken(req, res, async () => {
     if (req.user.role !== "MEDICO") {
-      return res.status(403).json({ message: "Acceso denegado. No sos médico." });
+      return res
+        .status(403)
+        .json({ message: "Acceso denegado. No sos médico." });
     }
     next();
   });
 }
-
 
 export async function verifySubscription(req, res, next) {
   try {

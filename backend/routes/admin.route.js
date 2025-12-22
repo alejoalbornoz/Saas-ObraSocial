@@ -4,7 +4,7 @@ import {
   getUserById,
   getAllUsers,
 } from "../controllers/admin.controller.js";
-import { verifyAdmin, verifyToken } from "../middleware/authMiddleware.js";
+import { verifyAdmin, verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
