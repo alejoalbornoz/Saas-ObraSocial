@@ -16,8 +16,8 @@ const PLANS: Plan[] = [
   {
     id: "basic",
     name: "Básico",
-    priceMonthly: 1990,
-    priceYearly: 19900,
+    priceMonthly: 19900,
+    priceYearly: 199000,
     features: [
       "Consultas online ilimitadas",
       "Acceso a la cartilla básica",
@@ -27,8 +27,8 @@ const PLANS: Plan[] = [
   {
     id: "standard",
     name: "Estándar",
-    priceMonthly: 4990,
-    priceYearly: 49900,
+    priceMonthly: 49900,
+    priceYearly: 499000,
     highlight: true,
     features: [
       "Consultas presenciales y online",
@@ -40,8 +40,8 @@ const PLANS: Plan[] = [
   {
     id: "premium",
     name: "Premium",
-    priceMonthly: 8990,
-    priceYearly: 89900,
+    priceMonthly: 89900,
+    priceYearly: 899000,
     features: [
       "Especialistas sin coseguro",
       "Cobertura odontológica completa",
