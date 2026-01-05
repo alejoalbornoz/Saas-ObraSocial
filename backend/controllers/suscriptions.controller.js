@@ -1,5 +1,13 @@
 import { prisma } from "../config/prismaClient.config.js";
 import { AfiliationPlan, SubscriptionStatus } from "@prisma/client";
+import { PreApproval } from "mercadopago";
+import { mercadopago } from "../config/mercadopago.config.js";
+
+const PLAN_PRICE = {
+  BASICO: 5000,
+  PREMIUM: 8000,
+  PLATINO: 12000,
+};
 
 export async function createSubscription(req, res) {
   try {
@@ -23,22 +31,39 @@ export async function createSubscription(req, res) {
       });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    // 1️⃣ Crear suscripción en Mercado Pago
+    const preapproval = await new PreApproval(mercadopago).create({
+      body: {
+        reason: `Plan ${plan}`,
+        payer_email: user.email,
+        back_url: process.env.APP_URL,
+        auto_recurring: {
+          frequency: 1,
+          frequency_type: "months",
+          transaction_amount: PLAN_PRICE[plan],
+          currency_id: "ARS",
+        },
+        status: "pending",
+      },
+    });
+
+    // 2️⃣ Guardar suscripción local (SIN activar)
     const subscription = await prisma.subscription.create({
       data: {
         userId,
         plan,
         status: SubscriptionStatus.PENDING,
-        nextBilling: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        mpPreapprovalId: preapproval.id,
       },
     });
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: { afiliation: plan },
-    });
-
     return res.json({
-      message: "Suscripción creada. Falta completar el pago.",
+      message: "Suscripción creada. Redirigir a Mercado Pago.",
+      initPoint: preapproval.init_point,
       subscription,
     });
   } catch (error) {
@@ -54,7 +79,9 @@ export async function cancelSubscription(req, res) {
     const subscription = await prisma.subscription.findFirst({
       where: {
         userId,
-        status: { in: [SubscriptionStatus.ACTIVE, SubscriptionStatus.PENDING] },
+        status: {
+          in: [SubscriptionStatus.ACTIVE, SubscriptionStatus.PENDING],
+        },
       },
     });
 
