@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+// webhook.controller.js
 import { PreApproval } from "mercadopago";
-import { mercadopago } from "../config/mercadopago.config";
+import { mercadopago } from "../config/mercadopago.config.js";
 import { prisma } from "../config/prismaClient.config.js";
 
-export const mercadopagoWebhook = async (req: Request, res: Response) => {
+export const mercadopagoWebhook = async (req, res) => {
   const { type, data } = req.body;
 
   if (type !== "subscription_preapproval") {
@@ -27,7 +27,7 @@ export const mercadopagoWebhook = async (req: Request, res: Response) => {
       where: { id: subscription.id },
       data: {
         status: "ACTIVE",
-        startDate: preapproval.date_created 
+        startDate: preapproval.date_created
           ? new Date(preapproval.date_created)
           : new Date(),
         nextBilling: preapproval.next_payment_date

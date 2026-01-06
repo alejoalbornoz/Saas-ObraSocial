@@ -3,7 +3,7 @@ import { Router } from "express";
 import {
   createSubscription,
   cancelSubscription,
-} from "../controllers/suscriptions.controller.js";
+} from "../controllers/subscriptions.controller.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
