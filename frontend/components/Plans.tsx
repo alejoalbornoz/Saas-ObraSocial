@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Check } from "lucide-react";
 
 type Plan = {
-  id: string;
+  id: "BASICO" | "PREMIUM" | "PLATINO";
   name: string;
   priceMonthly: number;
   priceYearly?: number;
@@ -14,10 +14,10 @@ type Plan = {
 
 const PLANS: Plan[] = [
   {
-    id: "basic",
+    id: "BASICO",
     name: "Básico",
-    priceMonthly: 19900,
-    priceYearly: 199000,
+    priceMonthly: 5000,
+    priceYearly: 50000,
     features: [
       "Consultas online ilimitadas",
       "Acceso a la cartilla básica",
@@ -25,10 +25,10 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "standard",
+    id: "PREMIUM",
     name: "Estándar",
-    priceMonthly: 49900,
-    priceYearly: 499000,
+    priceMonthly: 8000,
+    priceYearly: 80000,
     highlight: true,
     features: [
       "Consultas presenciales y online",
@@ -38,10 +38,10 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "premium",
+    id: "PLATINO",
     name: "Premium",
-    priceMonthly: 89900,
-    priceYearly: 899000,
+    priceMonthly: 12000,
+    priceYearly: 120000,
     features: [
       "Especialistas sin coseguro",
       "Cobertura odontológica completa",
@@ -53,9 +53,11 @@ const PLANS: Plan[] = [
 
 export default function Plans() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+  const [loadingPlan, setLoadingPlan] = useState<
+    "BASICO" | "PREMIUM" | "PLATINO" | null
+  >(null);
 
   const formatPrice = (amount: number) => {
-    // formato simple para ARS
     return amount.toLocaleString("es-AR", {
       style: "currency",
       currency: "ARS",
@@ -63,15 +65,51 @@ export default function Plans() {
     });
   };
 
+  async function handleSubscribe(planId: Plan["id"]) {
+    try {
+      setLoadingPlan(planId);
+
+      const res = await fetch(
+        "http://localhost:4000/api/subscriptions/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ plan: planId }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Error al crear la suscripción");
+      }
+
+      const data = await res.json();
+
+      if (!data.initPoint) {
+        throw new Error("No se recibió URL de Mercado Pago");
+      }
+
+      window.location.href = data.initPoint;
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo iniciar la suscripción. Intentá nuevamente.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
+
   return (
-    <section className="w-full h-screen  py-20 bg-gray-50 flex flex-col justify-center items-center gap-8">
+    <section className="w-full min-h-screen py-20 bg-gray-50 flex flex-col items-center gap-8">
       <div className="max-w-5xl w-full px-6 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
           Planes pensados para vos
         </h2>
         <p className="mt-2 text-gray-600">
-          Elegí el plan que mejor se adapte a tu familia. Cambiá fácilmente
-          entre facturación mensual o anual.
+          Elegí el plan que mejor se adapte a tu familia. Podés cambiarlo cuando
+          quieras.
         </p>
 
         <div className="mt-6 inline-flex items-center rounded-full bg-white p-1 shadow-sm">
@@ -112,6 +150,7 @@ export default function Plans() {
               <h3 className="text-xl font-semibold text-gray-800">
                 {plan.name}
               </h3>
+
               <div className="mt-4 flex items-end gap-2">
                 <span className="text-3xl font-bold text-gray-900">
                   {billing === "monthly"
@@ -122,9 +161,6 @@ export default function Plans() {
                   / {billing === "monthly" ? "mes" : "año"}
                 </span>
               </div>
-              <p className="mt-3 text-sm text-gray-600">
-                Ideal para {plan.name.toLowerCase()} y familias pequeñas.
-              </p>
 
               <ul className="mt-6 flex flex-col gap-3">
                 {plan.features.map((f, i) => (
@@ -136,28 +172,31 @@ export default function Plans() {
               </ul>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <button
-                className={`w-full py-3 rounded-lg font-semibold ${
-                  plan.highlight
-                    ? "bg-blue-600 text-white"
-                    : "bg-white border border-gray-200 text-gray-800"
-                }`}
-              >
-                {plan.highlight ? "Elegir plan" : "Seleccionar"}
-              </button>
-              <a className="text-xs text-center text-gray-500 hover:text-gray-700">
-                Ver detalle del plan
-              </a>
-            </div>
+            <button
+              onClick={() => handleSubscribe(plan.id)}
+              disabled={loadingPlan === plan.id}
+              className={`w-full py-3 rounded-lg font-semibold transition-opacity ${
+                plan.highlight
+                  ? "bg-blue-600 text-white"
+                  : "bg-white border border-gray-200 text-gray-800"
+              } ${
+                loadingPlan === plan.id ? "opacity-60 cursor-not-allowed" : ""
+              }`}
+            >
+              {loadingPlan === plan.id
+                ? "Redirigiendo..."
+                : plan.highlight
+                ? "Elegir plan"
+                : "Seleccionar"}
+            </button>
           </div>
         ))}
       </div>
 
       <div className="max-w-5xl w-full px-6 text-center text-sm text-gray-500">
         <p>
-          Precios referenciales. Los valores pueden variar según la región y el
-          grupo familiar.
+          Precios referenciales. La facturación y el cobro se realizan a través
+          de Mercado Pago.
         </p>
       </div>
     </section>
