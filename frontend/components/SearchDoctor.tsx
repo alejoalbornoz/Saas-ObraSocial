@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -20,6 +20,10 @@ type Doctor = {
 export default function SearchDoctor() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // 🔍 filtros
+  const [specialtyFilter, setSpecialtyFilter] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
   const router = useRouter();
   const alreadyRedirected = useRef(false);
@@ -62,6 +66,21 @@ export default function SearchDoctor() {
     checkUser();
   }, [router]);
 
+  // 🧠 Médicos filtrados
+  const filteredDoctors = useMemo(() => {
+    return doctors.filter((doctor) => {
+      const matchesSpecialty = doctor.specialty
+        .toLowerCase()
+        .includes(specialtyFilter.toLowerCase());
+
+      const matchesLocation = doctor.user.location
+        ?.toLowerCase()
+        .includes(locationFilter.toLowerCase());
+
+      return matchesSpecialty && (matchesLocation || locationFilter === "");
+    });
+  }, [doctors, specialtyFilter, locationFilter]);
+
   if (loading)
     return (
       <div className="min-h-screen flex justify-center items-center text-gray-600">
@@ -77,8 +96,34 @@ export default function SearchDoctor() {
             Buscar Médicos
           </h1>
 
+          {/* 🔍 FILTROS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <input
+              type="text"
+              placeholder="Filtrar por especialidad (ej: cardiología)"
+              value={specialtyFilter}
+              onChange={(e) => setSpecialtyFilter(e.target.value)}
+              className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            <input
+              type="text"
+              placeholder="Filtrar por localidad (ej: Córdoba)"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* 🩺 LISTA */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {doctors.map((doctor) => (
+            {filteredDoctors.length === 0 && (
+              <p className="text-gray-500 col-span-full text-center">
+                No se encontraron médicos con esos filtros 😬
+              </p>
+            )}
+
+            {filteredDoctors.map((doctor) => (
               <Link
                 href={`/buscar/doctores/${doctor.id}`}
                 key={doctor.id}
