@@ -9,7 +9,7 @@ import { verifyAdmin, verifyToken } from "../middleware/auth.middleware.js";
 const router = Router();
 
 router.post("/update-role", verifyToken, verifyAdmin, updateUserRole);
-router.get("/user", verifyToken, verifyAdmin, getAllUsers);
+router.get("/users", verifyToken, verifyAdmin, getAllUsers);
 router.get("/user/:id", verifyToken, verifyAdmin, getUserById);
 
 export default router;
