@@ -28,6 +28,8 @@ export default function SearchDoctor() {
   const router = useRouter();
   const alreadyRedirected = useRef(false);
 
+
+
   useEffect(() => {
     async function checkUser() {
       try {

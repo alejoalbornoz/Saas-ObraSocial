@@ -48,7 +48,7 @@ export default function HomeDoctor() {
         const data: Shift[] = await res.json();
         setShifts(data);
       } catch (err) {
-        setError("Error al cargar los turnos");
+        setError(`Error al cargar los turnos, error: ${err}`);
       } finally {
         setLoading(false);
       }
