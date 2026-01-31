@@ -113,7 +113,7 @@ export default function Shifts() {
           {shifts.map((shift) => (
             <div
               key={shift.id}
-              className="border p-4 rounded-lg shadow-sm bg-white hover:shadow-md transition"
+              className="border p-4 rounded-lg shadow-sm bg-blue-200 hover:shadow-md transition"
             >
               <p className="font-semibold">
                 Fecha:{" "}
