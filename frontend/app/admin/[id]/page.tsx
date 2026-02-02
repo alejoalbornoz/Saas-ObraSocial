@@ -1,36 +1,40 @@
+import { cookies } from "next/headers";
+
 export default async function UserPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const res = await fetch(
-    `http://localhost:4000/api/admin/user/${params.id}`,
-    {
-      credentials: "include",
-      cache: "no-store",
-    }
-  );
+  const { id } = await params;
+
+
+  const cookieStore = await cookies();
+
+ 
+  const cookieHeader = cookieStore
+    .getAll()
+    .map((c) => `${c.name}=${c.value}`)
+    .join("; ");
+
+  const res = await fetch(`http://localhost:4000/api/admin/user/${id}`, {
+    headers: {
+      Cookie: cookieHeader,
+    },
+    cache: "no-store",
+  });
 
   if (!res.ok) {
-    throw new Error("Error al obtener usuario");
+    const text = await res.text();
+    throw new Error(`Status ${res.status}: ${text}`);
   }
 
   const user = await res.json();
 
   return (
-    <div>
-      <h1>{user.name} {user.lastName}</h1>
-      <p>Email: {user.email}</p>
-      <p>DNI: {user.DNI}</p>
-      <p>Rol: {user.role}</p>
-
-      {user.doctor && (
-        <>
-          <h2>Doctor</h2>
-          <p>{user.doctor.specialty}</p>
-          <p>{user.doctor.bio}</p>
-        </>
-      )}
+    <div className="h-screen">
+      <h1 className="text-black">
+        {user.name} {user.lastName}
+      </h1>
     </div>
   );
 }

@@ -9,6 +9,7 @@ type User = {
   name: string;
   lastName: string;
   email: string;
+  role: string;
   DNI: string;
   afiliation?: string | null;
 };
@@ -117,7 +118,7 @@ export default function Profile() {
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(passwordForm),
-        }
+        },
       );
 
       const data = await res.json();
@@ -147,7 +148,7 @@ export default function Profile() {
           credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password: deletePassword }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -168,6 +169,21 @@ export default function Profile() {
   if (loading) return <p className="p-10">Cargando...</p>;
 
   if (!user) return <p>No se encontró el usuario.</p>;
+
+  if (user.role === "ADMIN") {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-xl text-center">
+          <h1 className="text-4xl font-bold text-blue-700 mb-4">
+            Acceso Restringido
+          </h1>
+          <p className="text-xl text-gray-700">
+            Contacte al desarrollador de la página para ingresar a esta función
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-xl">

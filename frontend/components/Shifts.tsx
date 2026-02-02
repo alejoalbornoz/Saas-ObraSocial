@@ -103,91 +103,95 @@ export default function Shifts() {
   }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto h-screen flex justify-center items-center flex-col">
-      <h1 className="text-3xl font-bold mb-6 mt-10 ">Mis Turnos</h1>
+    <div className="min-h-screen p-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-center">Mis Turnos</h1>
 
-      {shifts.length === 0 ? (
-        <p className="text-gray-600">No tenés turnos cargados.</p>
-      ) : (
-        <div className=" grid grid-cols-2 gap-4 p-4">
-          {shifts.map((shift) => (
-            <div
-              key={shift.id}
-              className="border p-4 rounded-lg shadow-sm bg-blue-200 hover:shadow-md transition"
-            >
-              <p className="font-semibold">
-                Fecha:{" "}
-                {new Date(shift.date).toLocaleString("es-AR", {
-                  dateStyle: "full",
-                  timeStyle: "short",
-                })}
-              </p>
-              <p className="mt-1">
-                Estado:{" "}
-                <span
-                  className={`font-bold ${
-                    shift.status === "CONFIRMADO"
-                      ? "text-green-600"
-                      : shift.status === "PENDIENTE"
-                      ? "text-yellow-600"
-                      : shift.status === "CANCELADO" ||
-                        shift.status === "RECHAZADO"
-                      ? "text-red-600"
-                      : "text-blue-600"
-                  }`}
-                >
-                  {shift.status}
-                </span>
-              </p>
-
-              {shift.doctor && (
-                <p className="mt-2 ">
-                  Doctor:{" "}
-                  <span className="font-medium">
-                    {shift.doctor.user.name} {shift.doctor.user.lastName}
-                  </span>
+        {shifts.length === 0 ? (
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <p className="text-gray-600">No tenés turnos cargados.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {shifts.map((shift) => (
+              <div
+                key={shift.id}
+                className="border p-4 rounded-lg shadow-sm bg-blue-200 hover:shadow-md transition"
+              >
+                <p className="font-semibold">
+                  Fecha:{" "}
+                  {new Date(shift.date).toLocaleString("es-AR", {
+                    dateStyle: "full",
+                    timeStyle: "short",
+                  })}
                 </p>
-              )}
-
-              {shift.doctor && (
-                <p className="mt-2 ">
-                  Ubicacion:{" "}
-                  <span className="font-medium">
-                    {shift.doctor.user.location}
-                  </span>
-                </p>
-              )}
-
-              {shift.doctor && (
-                <p className="mt-2 ">
-                  Especialidad:{" "}
-                  <span className="font-medium">{shift.doctor.specialty}</span>
-                </p>
-              )}
-
-              {shift.patient && (
-                <p className="mt-2">
-                  Paciente:{" "}
-                  <span className="font-medium">
-                    {shift.patient.name} {shift.patient.lastName}
-                  </span>
-                </p>
-              )}
-
-              {shift.status !== "CANCELADO" &&
-                shift.status !== "FINALIZADO" &&
-                shift.status !== "RECHAZADO" && (
-                  <button
-                    onClick={() => cancelShift(shift.id)}
-                    className="bg-red-600 px-3 py-2 mt-3 rounded-md text-white hover:bg-red-700 transition"
+                <p className="mt-1">
+                  Estado:{" "}
+                  <span
+                    className={`font-bold ${
+                      shift.status === "CONFIRMADO"
+                        ? "text-green-600"
+                        : shift.status === "PENDIENTE"
+                        ? "text-yellow-600"
+                        : shift.status === "CANCELADO" ||
+                          shift.status === "RECHAZADO"
+                        ? "text-red-600"
+                        : "text-blue-600"
+                    }`}
                   >
-                    Cancelar turno
-                  </button>
+                    {shift.status}
+                  </span>
+                </p>
+
+                {shift.doctor && (
+                  <p className="mt-2">
+                    Doctor:{" "}
+                    <span className="font-medium">
+                      {shift.doctor.user.name} {shift.doctor.user.lastName}
+                    </span>
+                  </p>
                 )}
-            </div>
-          ))}
-        </div>
-      )}
+
+                {shift.doctor && (
+                  <p className="mt-2">
+                    Ubicacion:{" "}
+                    <span className="font-medium">
+                      {shift.doctor.user.location}
+                    </span>
+                  </p>
+                )}
+
+                {shift.doctor && (
+                  <p className="mt-2">
+                    Especialidad:{" "}
+                    <span className="font-medium">{shift.doctor.specialty}</span>
+                  </p>
+                )}
+
+                {shift.patient && (
+                  <p className="mt-2">
+                    Paciente:{" "}
+                    <span className="font-medium">
+                      {shift.patient.name} {shift.patient.lastName}
+                    </span>
+                  </p>
+                )}
+
+                {shift.status !== "CANCELADO" &&
+                  shift.status !== "FINALIZADO" &&
+                  shift.status !== "RECHAZADO" && (
+                    <button
+                      onClick={() => cancelShift(shift.id)}
+                      className="bg-red-600 px-3 py-2 mt-3 rounded-md text-white hover:bg-red-700 transition w-full"
+                    >
+                      Cancelar turno
+                    </button>
+                  )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
