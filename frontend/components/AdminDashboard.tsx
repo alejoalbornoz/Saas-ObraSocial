@@ -45,10 +45,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function getUsers() {
       try {
-        const res = await fetch(
-          "http://localhost:4000/api/admin/users",
-          { credentials: "include" }
-        );
+        const res = await fetch("http://localhost:4000/api/admin/users", {
+          credentials: "include",
+        });
 
         if (!res.ok) throw new Error();
 
@@ -73,10 +72,11 @@ export default function AdminDashboard() {
 
     const term = searchTerm.toLowerCase();
     setFilteredUsers(
-      users.filter((u) =>
-        `${u.name} ${u.lastName}`.toLowerCase().includes(term) ||
-        u.DNI.toString().includes(term)
-      )
+      users.filter(
+        (u) =>
+          `${u.name} ${u.lastName}`.toLowerCase().includes(term) ||
+          u.DNI.toString().includes(term),
+      ),
     );
   }, [searchTerm, users]);
 
@@ -86,20 +86,17 @@ export default function AdminDashboard() {
     try {
       setUpdating(true);
 
-      const res = await fetch(
-        "http://localhost:4000/api/admin/update-role",
-        {
-          method: "PUT",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: selectedUser.id,
-            newRole: selectedRole,
-            specialty: selectedRole === "MEDICO" ? specialty : undefined,
-            bio: selectedRole === "MEDICO" ? bio : undefined,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:4000/api/admin/update-role", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: selectedUser.id,
+          newRole: selectedRole,
+          specialty: selectedRole === "MEDICO" ? specialty : undefined,
+          bio: selectedRole === "MEDICO" ? bio : undefined,
+        }),
+      });
 
       const data = await res.json();
 
@@ -110,18 +107,14 @@ export default function AdminDashboard() {
 
       setUsers((prev) =>
         prev.map((u) =>
-          u.id === selectedUser.id
-            ? { ...u, role: selectedRole }
-            : u
-        )
+          u.id === selectedUser.id ? { ...u, role: selectedRole } : u,
+        ),
       );
 
       setFilteredUsers((prev) =>
         prev.map((u) =>
-          u.id === selectedUser.id
-            ? { ...u, role: selectedRole }
-            : u
-        )
+          u.id === selectedUser.id ? { ...u, role: selectedRole } : u,
+        ),
       );
 
       closeModal();

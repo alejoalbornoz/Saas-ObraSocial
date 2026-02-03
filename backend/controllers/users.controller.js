@@ -151,6 +151,7 @@ export async function updateUserInfo(req, res) {
         lastName: true,
         email: true,
         DNI: true,
+        location: true,
         createdAt: true,
         updatedAt: true,
       },

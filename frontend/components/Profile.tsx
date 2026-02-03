@@ -11,6 +11,7 @@ type User = {
   email: string;
   role: string;
   DNI: string;
+  location?: string;
   afiliation?: string | null;
 };
 
@@ -25,6 +26,7 @@ export default function Profile() {
     lastName: "",
     email: "",
     DNI: "",
+    location: "",
   });
 
   const router = useRouter();
@@ -52,6 +54,7 @@ export default function Profile() {
           lastName: data.user.lastName,
           email: data.user.email,
           DNI: data.user.DNI,
+          location: data.user.location,
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -73,7 +76,7 @@ export default function Profile() {
   const handleSaveInfo = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/users/update", {
-        method: "PUT",
+        method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(infoForm),
@@ -82,16 +85,18 @@ export default function Profile() {
       const data = await res.json();
 
       if (res.ok) {
-        setUser({ ...user!, ...infoForm });
+        // Actualizar el estado del user con los datos del servidor
+        setUser(data.user);
         setEditMode(false);
+        alert("Información actualizada correctamente");
       } else {
         alert(data.message);
       }
     } catch (error) {
       console.error(error);
+      alert("Error al actualizar la información");
     }
   };
-
   const handleLogout = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/users/logout", {
@@ -180,6 +185,14 @@ export default function Profile() {
           <p className="text-xl text-gray-700">
             Contacte al desarrollador de la página para ingresar a esta función
           </p>
+          <div className="flex justify-center mb-6 mt-5">
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            >
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -214,6 +227,9 @@ export default function Profile() {
             </p>
             <p>
               <strong>DNI:</strong> {user.DNI}
+            </p>
+            <p>
+              <strong>Ubicación:</strong> {user.location}
             </p>
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -251,6 +267,13 @@ export default function Profile() {
               onChange={handleInfoChange}
               className="w-full p-2 border rounded"
               placeholder="DNI"
+            />
+            <input
+              name="location"
+              value={infoForm.location}
+              onChange={handleInfoChange}
+              className="w-full p-2 border rounded"
+              placeholder="Ej: Palermo, Buenos Aires"
             />
 
             <div className="flex gap-3">
