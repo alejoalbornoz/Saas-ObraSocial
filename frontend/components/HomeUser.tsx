@@ -43,7 +43,7 @@ export default function HomeUser() {
       id: "estudios",
       title: "Solicitar un estudio / tratamiento",
       desc: "Iniciá la solicitud para estudios, autorizaciones y tratamientos.",
-      href: "/solicitar/estudio",
+      href: "/buscar/contacto-solicitud",
       emoji: "🧪",
     },
   ];
