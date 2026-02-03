@@ -111,20 +111,7 @@ export default function Login() {
 
         <div className="my-6 border-b"></div>
 
-        <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-3 flex items-center justify-center gap-2 hover:bg-gray-50">
-          <Image src="/google.png" alt="google" width={20} height={20} />
-          Continuar con Google
-        </button>
-
-        <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-3 flex items-center justify-center gap-2 hover:bg-gray-50">
-          <Image src="/facebook.png" alt="facebook" width={20} height={20} />
-          Continuar con Facebook
-        </button>
-
-        <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-6 flex items-center justify-center gap-2 hover:bg-gray-50">
-          <Image src="/apple.png" alt="apple" width={20} height={20} />
-          Continuar con Apple
-        </button>
+       
 
         <p className="text-center text-sm">
           ¿No tenés cuenta?{" "}

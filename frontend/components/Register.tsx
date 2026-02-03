@@ -72,7 +72,7 @@ export default function RegisterPage() {
       }
 
       console.log(data);
-      alert("Cuenta creada con éxito");
+      
 
       setForm({
         name: "",
@@ -209,18 +209,7 @@ export default function RegisterPage() {
 
           <div className="my-6 border-b"></div>
 
-          <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-3 flex items-center justify-center gap-2 hover:bg-gray-50">
-            <Image src="/google.png" alt="google" width={20} height={20} />
-            Registrarte con Google
-          </button>
-          <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-3 flex items-center justify-center gap-2 hover:bg-gray-50">
-            <Image src="/facebook.png" alt="facebook" width={20} height={20} />
-            Registrarte con Facebook
-          </button>
-          <button className="w-full border border-gray-300 bg-white rounded-lg py-2 mb-6 flex items-center justify-center gap-2 hover:bg-gray-50">
-            <Image src="/apple.png" alt="apple" width={20} height={20} />
-            Registrarte con Apple
-          </button>
+          
 
 
           <div className="mt-8 text-sm flex flex-col gap-2 text-center">

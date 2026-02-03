@@ -87,7 +87,7 @@ export default function AdminDashboard() {
       setUpdating(true);
 
       const res = await fetch(
-        "http://localhost:4000/api/admin/users/role",
+        "http://localhost:4000/api/admin/update-role",
         {
           method: "PUT",
           credentials: "include",

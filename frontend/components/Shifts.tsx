@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 type DoctorUser = {
   id: number;
@@ -116,7 +115,7 @@ export default function Shifts() {
             {shifts.map((shift) => (
               <div
                 key={shift.id}
-                className="border p-4 rounded-lg shadow-sm bg-blue-200 hover:shadow-md transition"
+                className="border p-4 rounded-lg shadow-sm bg-blue-100 hover:shadow-md transition"
               >
                 <p className="font-semibold">
                   Fecha:{" "}
