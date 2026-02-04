@@ -5,51 +5,63 @@ import {
   useEffect,
   useState,
   ReactNode,
+  useCallback,
 } from "react";
 
 interface User {
   id: string;
   email: string;
-  role: string;
+  role: "ADMIN" | "USUARIO" | "MEDICO";
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  logout: () => void;
+  isAdmin: boolean;
+  hasRole: (role: User["role"]) => boolean;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
-  children: ReactNode; 
+  children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await fetch("http://localhost:4000/api/users/me", {
-          credentials: "include", 
-        });
+  const fetchUser = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:4000/api/users/me", {
+        credentials: "include",
+      });
 
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error("Error cargando usuario:", error);
-      } finally {
-        setLoading(false);
+      if (res.status === 401) {
+        setUser(null);
+        return;
       }
-    }
 
-    fetchUser();
+      if (!res.ok) {
+        throw new Error("Error obteniendo usuario");
+      }
+
+      const data = await res.json();
+      setUser(data.user);
+    } catch (error) {
+      console.error("Error cargando usuario:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   const logout = async () => {
     await fetch("http://localhost:4000/api/users/logout", {
@@ -60,11 +72,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value: AuthContextType = {
+    user,
+    loading,
+    isAdmin: user?.role === "ADMIN",
+    hasRole: (role) => user?.role === role,
+    logout,
+    refreshUser: fetchUser,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {
