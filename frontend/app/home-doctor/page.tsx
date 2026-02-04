@@ -1,10 +1,13 @@
-import HomeDoctor from '@/components/HomeDoctor'
-import React from 'react'
+import HomeDoctor from "@/components/HomeDoctor";
+import React from "react";
+import { MedicoGuard } from "@/middleware/MedicoGuard";
 
 export default function HomeDoctorPage() {
   return (
-   <>
-    <HomeDoctor />
-   </>
-  )
+    <>
+      <MedicoGuard>
+        <HomeDoctor />
+      </MedicoGuard>
+    </>
+  );
 }
